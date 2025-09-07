@@ -1,0 +1,5 @@
+<resources>
+    <string name="text_signIn">Уже есть аккаунт?</string>
+    <string name="signIn">Войти</string>
+
+</resources>
