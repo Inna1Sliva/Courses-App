@@ -3,7 +3,7 @@ package com.it.shka.ourses_app.hilt
 import android.content.Context
 import androidx.room.Room
 import com.it.shka.core.data.database.AppDatabase
-import com.it.shka.feature_onboarding.data.AppUserDatabase
+import com.it.shka.feature_onboarding.data.database.AppUserDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

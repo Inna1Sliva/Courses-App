@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.it.shka.feature_onboarding.presentation.screens.ScreenOnboarding
 import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
+import com.it.shka.feature_onboarding.presentation.screens.ScreenMain
 
 @Composable
 fun NavigationScreenOnboarding(){
@@ -15,7 +16,10 @@ fun NavigationScreenOnboarding(){
         startDestination = RouteOnboarding.ScreenOnboardingStart.rout
     ){
         composable(RouteOnboarding.ScreenOnboardingStart.rout) {
-            ScreenOnboarding()
+            ScreenOnboarding(auth = {}, navController)
+        }
+        composable(RouteOnboarding.ScreenMain.rout) {
+            ScreenMain()
         }
     }
 }

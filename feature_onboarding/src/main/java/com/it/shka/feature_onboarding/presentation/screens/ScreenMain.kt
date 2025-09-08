@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,12 +60,12 @@ fun ScreenMain(){
         Button(modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)
-            .background(color = Color.Green, shape = RoundedCornerShape(100.dp)),
+            .background(color = colorResource(R.color.button), shape = RoundedCornerShape(100.dp)),
 
             onClick = {},
             colors =ButtonDefaults.buttonColors(
-                containerColor = Color.Green,
-                contentColor = Color.Green
+                containerColor = colorResource(R.color.button),
+                contentColor =  colorResource(R.color.button)
             )) {
             Text(text = "Продолжить",
                 color = Color.White,

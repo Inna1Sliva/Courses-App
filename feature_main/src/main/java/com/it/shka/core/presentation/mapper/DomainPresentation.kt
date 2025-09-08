@@ -6,31 +6,7 @@ import com.it.shka.core.domain.model.Page
 import com.it.shka.core.presentation.model.CoursesModel
 import com.it.shka.core.presentation.model.PageModel
 
-fun PageModel.toDomainPage(): Page{
-    val courses = this.data.map {coursesDto->
-        Courses(
-            hasLike = coursesDto.hasLike,
-            id = coursesDto.id,
-            price = coursesDto.price,
-            publishDate = coursesDto.publishDate,
-            rate = coursesDto.rate,
-            startDate = coursesDto.startDate,
-            text = coursesDto.text,
-            title = coursesDto.title,
-            image = coursesDto.image,
-            destination = coursesDto.destination,
-            categori = coursesDto.categori
-        )
-    }
-    return Page(
-        data = courses,
-        first = this.first,
-        items = this.items,
-        last = this.last,
-        next = this.next,
-        pages = this.pages
-    )
-}
+
 
 fun List<Courses>.toDomain(favoriteIds: Set<Int>): List<CoursesModel> {
     return this.map {
