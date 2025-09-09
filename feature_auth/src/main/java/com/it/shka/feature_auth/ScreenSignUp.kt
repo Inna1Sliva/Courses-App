@@ -50,12 +50,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.it.shka.feature_auth.rout.RouteAuthScreens
 
 @Composable
-fun ScreenSignUp(viewModel: AuthUserViewModel, navController: NavHostController){
+fun ScreenSignUp( navController: NavHostController){
+    val viewModel = hiltViewModel<AuthUserViewModel>()
     val authMessage = viewModel.authMessage.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }

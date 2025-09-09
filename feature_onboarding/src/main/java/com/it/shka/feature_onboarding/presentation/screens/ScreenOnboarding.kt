@@ -22,13 +22,13 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun ScreenOnboarding(auth:()-> Unit, navHostController: NavHostController){
+fun ScreenOnboarding(main:()-> Unit, navHostController: NavHostController){
     val vm = hiltViewModel<MainViewModel>()
     val userIdState = vm.userIdState.collectAsState()
     LaunchedEffect(Unit) {
         when(userIdState.value.authId?.isNotEmpty()){
             true->{
-                auth
+              main
             }
 
             else -> {
@@ -36,7 +36,7 @@ fun ScreenOnboarding(auth:()-> Unit, navHostController: NavHostController){
             }
         }
 
-        delay(3000)
+        delay(7000)
     }
     Box(
         modifier = Modifier

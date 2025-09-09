@@ -25,10 +25,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.it.shka.feature_onboarding.R
+import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
+import java.util.UUID
 
 @Composable
-fun ScreenMain(){
+fun ScreenMain( navHostController: NavHostController, navOnboardingController: NavHostController){
+    //val userId = UUID.randomUUID().toString()
     Column (modifier = Modifier
         .fillMaxSize()
         .background(Color.Black),
@@ -62,7 +66,13 @@ fun ScreenMain(){
             .padding(20.dp)
             .background(color = colorResource(R.color.button), shape = RoundedCornerShape(100.dp)),
 
-            onClick = {},
+            onClick = {
+               navHostController.navigate(RouteOnboarding.ScreenAuthUser.rout){
+                   popUpTo(navOnboardingController.graph.startDestinationId){
+                       inclusive = true
+                   }
+               }
+                      },
             colors =ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.button),
                 contentColor =  colorResource(R.color.button)
