@@ -36,7 +36,7 @@ fun ScreenOnboarding(main:()-> Unit, navHostController: NavHostController){
             }
         }
 
-        delay(7000)
+
     }
     Box(
         modifier = Modifier
