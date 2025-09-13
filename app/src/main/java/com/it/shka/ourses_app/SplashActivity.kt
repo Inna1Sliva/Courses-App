@@ -1,43 +1,46 @@
-package com.it.shka.feature_onboarding.presentation.screens
+package com.it.shka.ourses_app
 
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.lifecycle.lifecycleScope
 import com.it.shka.feature_onboarding.R
-import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
+import com.it.shka.ourses_app.ui.theme.Сourses_AppTheme
 import kotlinx.coroutines.delay
 
-
-@Composable
-fun ScreenOnboarding(main:()-> Unit, navHostController: NavHostController){
-    val vm = hiltViewModel<MainViewModel>()
-    val userIdState = vm.userIdState.collectAsState()
-    LaunchedEffect(Unit) {
-        when(userIdState.value.authId?.isNotEmpty()){
-            true->{
-              main
-            }
-
-            else -> {
-                navHostController.navigate(RouteOnboarding.ScreenMain.rout)
+class SplashActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+     lifecycleScope.launchWhenCreated {
+         delay(2000)
+         val intent = Intent(this@SplashActivity, MainActivity::class.java)
+         startActivity(intent)
+         finish()
+     }
+        setContent {
+            Сourses_AppTheme {
+               SplashContentActivity()
             }
         }
-
-
     }
+}
+@Composable
+private fun SplashContentActivity() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,5 +56,5 @@ fun ScreenOnboarding(main:()-> Unit, navHostController: NavHostController){
         )
 
     }
-
 }
+

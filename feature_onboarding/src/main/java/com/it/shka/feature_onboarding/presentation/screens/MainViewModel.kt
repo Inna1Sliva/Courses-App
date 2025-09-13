@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_onboarding.data.DataRepositoryImp
 import com.it.shka.feature_onboarding.presentation.model.UserIdUi
-import com.it.shka.feature_onboarding.presentation.toDomainUserId
+import com.it.shka.feature_onboarding.presentation.mapper.toDomainUserId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

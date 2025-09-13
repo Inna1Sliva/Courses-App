@@ -16,10 +16,11 @@ fun AppNavigation(){
         navController = navController,
         startDestination = RoutAppNavigation.ScreenStartOnboarding.rout
     ){
-        composable(RoutAppNavigation.ScreenStartOnboarding.rout){
-            NavigationScreenOnboarding(navController)
+         composable (RoutAppNavigation.ScreenStartOnboarding.rout){
+        NavigationScreenOnboarding(navController)
         }
         composable(RoutAppNavigation.ScreenAuthUser.rout){
+
             AuthNavigation()
         }
         composable(RoutAppNavigation.ScreenMainContent.rout) {

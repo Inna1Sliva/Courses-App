@@ -1,4 +1,4 @@
-package com.it.shka.feature_onboarding.presentation
+package com.it.shka.feature_onboarding.presentation.mapper
 
 import com.it.shka.feature_onboarding.domain.model.UserId
 import com.it.shka.feature_onboarding.presentation.model.UserIdUi
