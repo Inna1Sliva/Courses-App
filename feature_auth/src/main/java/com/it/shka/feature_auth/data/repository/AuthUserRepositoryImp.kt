@@ -2,6 +2,7 @@ package com.it.shka.feature_auth.data.repository
 
 import android.util.Log
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
+import com.it.shka.feature_auth.data.database.AppUserIdDatabase
 import com.it.shka.feature_auth.data.model.AuthState
 import com.it.shka.feature_auth.data.model.Courses
 import com.it.shka.feature_auth.data.model.User
@@ -13,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAuthUsers) :
+class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAuthUsers, private val db: AppUserIdDatabase) :
     AuthUserRepository{
         private var stateValidEmail: Boolean = false
 

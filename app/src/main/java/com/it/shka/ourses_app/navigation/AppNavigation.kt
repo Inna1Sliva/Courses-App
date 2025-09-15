@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.it.shka.core.presentation.navigation.RootNavGraphMainContent
-import com.it.shka.feature_auth.AuthNavigation
+import com.it.shka.feature_auth.presentation.navigation.AuthNavigation
 import com.it.shka.feature_onboarding.presentation.navigation.NavigationScreenOnboarding
 import com.it.shka.ourses_app.navigation.rout.RoutAppNavigation
 

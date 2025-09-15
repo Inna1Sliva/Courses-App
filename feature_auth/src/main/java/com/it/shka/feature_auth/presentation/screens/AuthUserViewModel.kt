@@ -1,10 +1,9 @@
-package com.it.shka.feature_auth
+package com.it.shka.feature_auth.presentation.screens
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
-import com.it.shka.feature_auth.data.model.Courses
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,18 +25,15 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
         when{
             email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() ->{
                 _authMessage.value = "Пожалуйста, заполните все поля"
-                Log.d("Regist", "Пожалуйста, заполните все поля")
 
                 return
             }
                 repository.validateEmail(email)->{
                     _authMessage.value =  "Некорректный формат почты"
-             Log.d("Regist", "Некорректный формат почты")
                     //return
             }
             repository.validatePassword(password,repeatPassword)->{
                 _authMessage.value = "Пароли не совпадают"
-                Log.d("Regist", "Пароли не совпадают")
                 return
             }
             isEmailExists(email,password)->{
@@ -59,11 +55,7 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
                  repository.registerUser(email, password)
                  state = false
                  Log.d("Regist", "Пользователь успешно зарегистрирован")
-
-
-
              }
-
          }
         }
         return state

@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-  // alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp")
     id("kotlin-kapt")
     alias(libs.plugins.hilt)
 
@@ -53,7 +53,9 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation (libs.retrofit2.retrofit)
     implementation (libs.converter.gson)
-
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
