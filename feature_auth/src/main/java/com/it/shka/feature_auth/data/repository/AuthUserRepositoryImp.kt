@@ -3,12 +3,9 @@ package com.it.shka.feature_auth.data.repository
 import android.util.Log
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
 import com.it.shka.feature_auth.data.database.AppUserIdDatabase
-import com.it.shka.feature_auth.data.model.AuthState
-import com.it.shka.feature_auth.data.model.Courses
+import com.it.shka.feature_auth.data.model.AuthStateResult
 import com.it.shka.feature_auth.data.model.User
 import com.it.shka.feature_auth.domain.AuthUserRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,10 +48,11 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
 
     override fun registerUser(email: String, password: String){
            val user = User(email, email, password)
-           apiAuthUsers.registerUser(user).enqueue(object : Callback<AuthState> {
+
+           apiAuthUsers.registerUser(user).enqueue(object : Callback<AuthStateResult> {
                override fun onResponse(
-                   call: Call<AuthState?>,
-                   response: Response<AuthState?>
+                   call: Call<AuthStateResult?>,
+                   response: Response<AuthStateResult?>
                ) {
                  if (response.isSuccessful){
                      val apiResponse = response.body()
@@ -71,7 +69,7 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
                }
 
                override fun onFailure(
-                   call: Call<AuthState?>,
+                   call: Call<AuthStateResult?>,
                    t: Throwable
                ) {
                    Log.d("POST", "Ошибка сети")
