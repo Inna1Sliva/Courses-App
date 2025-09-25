@@ -7,6 +7,7 @@ import com.it.shka.core.data.api.ApiMainCourses
 import com.it.shka.core.data.database.AppDatabase
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
+import com.it.shka.feature_auth.data.database.AppUserIdDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +19,8 @@ import javax.inject.Singleton
 object ModuleNetwork {
      @Provides
      @Singleton
-    fun provideAuthUserRepository(apiService: ApiAuthUsers): AuthUserRepositoryImp{
-       return AuthUserRepositoryImp(apiService)
+    fun provideAuthUserRepository(apiService: ApiAuthUsers, database: AppUserIdDatabase): AuthUserRepositoryImp{
+       return AuthUserRepositoryImp(apiService, database)
      }
     @Provides
     @Singleton

@@ -29,7 +29,7 @@ fun providesRoomDatabase(@ApplicationContext context: Context): AppDatabase {
     }
     @Singleton
     @Provides
-    fun providesDatabaseUserID(@ApplicationContext context: Context): AppUserIdDatabase{
+    fun providesDatabaseUser(@ApplicationContext context: Context): AppUserIdDatabase{
         return Room.databaseBuilder(context = context, klass = AppUserIdDatabase::class.java, name = "user_Id")
             .build()
     }
