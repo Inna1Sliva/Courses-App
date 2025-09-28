@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiAuthUsers {
@@ -16,6 +17,6 @@ interface ApiAuthUsers {
   @POST("/users")
   fun registerUser(@Body user: User) : Result
   @GET("/users")
- suspend fun checkEmail(@Query("email") email: String): Boolean
+ suspend fun checkEmail(@Query("email") email: String): User
 
 }

@@ -16,7 +16,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +43,7 @@ fun ScreenMain(navHostController: NavHostController, mainContent:()-> Unit, navO
                 mainContent
             }
             else -> {
-             //   navHostController.navigate(RouteOnboarding.ScreenMain.rout)
+             // navHostController.navigate(RouteOnboarding.ScreenMain.rout)
             }
         }
 

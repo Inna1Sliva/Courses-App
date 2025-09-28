@@ -264,6 +264,7 @@ fun ScreenSignUp( navController: NavHostController){
                     color = Color.White,
                     fontStyle = FontStyle.Normal
                 )
+
             }
             Row(modifier = Modifier
                 .padding(top = 10.dp)

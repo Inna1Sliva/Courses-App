@@ -26,7 +26,13 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
 
 
     override suspend fun isEmailExists(email: String) : Boolean{
-       return withContext(Dispatchers.Main){apiAuthUsers.checkEmail(email)}
+        return try {
+            val userEmail =apiAuthUsers.checkEmail(email)
+            userEmail.email.isNotEmpty()
+        } catch (e: Exception){
+            e.printStackTrace()
+            false
+        }
     }
 
     override suspend fun setServerUser(user: User): Result {

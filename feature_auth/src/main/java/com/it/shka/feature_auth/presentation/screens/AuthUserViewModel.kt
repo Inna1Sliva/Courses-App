@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_auth.data.model.User
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
+import com.it.shka.feature_auth.domain.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,14 +17,10 @@ import javax.inject.Inject
 class AuthUserViewModel @Inject constructor (private val repository: AuthUserRepositoryImp) : ViewModel(){
     private val _authMessage = MutableStateFlow<String>("")
     val authMessage: StateFlow<String> get() = _authMessage
-
-    init {
-        viewModelScope.launch {
-
-        }
+    private var state: Boolean = false
+    private val userId = UUID.randomUUID().toString()
 
 
-    }
     fun registerUser(email: String, password: String, repeatPassword: String){
       viewModelScope.launch {
         when{
@@ -45,8 +42,9 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
               // return
             }
 
-            false->{
-                seveNewUser(email,password)
+            seveNewUser(email,password)->{
+                _authMessage.value = "Ошибка регистрации"
+
             }
 
 
@@ -56,20 +54,31 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
 
 
 
-    private  fun seveNewUser(email: String, password: String){
-        var state: Boolean = true
-        val userId = UUID.randomUUID().toString()
+    private  fun seveNewUser(email: String, password: String): Boolean{
 
-                 viewModelScope.launch {
-                     val user = User(id = userId, email = email, password = password)
-                     repository.registerUser(user)
-                         .collect { (resultServer, resultRoom) ->
-                             resultServer to resultRoom
-                         }
-                 }
+        try {
+            viewModelScope.launch {
+
+                val user = User(id = userId, email = email, password = password)
+                repository.registerUser(user)
+                    .collect { (resultServer, resultRoom) ->
+                      resultServer.success to resultRoom.success
+                        state = resultServer.success
+                    }
+
+            }
+
+        }catch (e: Exception){
+            e.printStackTrace()
+            state= false
+        }
+        return state
 
 
-                 Log.d("Regist", "Пользователь успешно зарегистрирован")
+
+
+
+                // Log.d("Regist", "Пользователь успешно зарегистрирован")
 
 
 
