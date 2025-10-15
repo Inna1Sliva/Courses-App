@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":feature_onboarding"))
     implementation(project(":feature_auth"))
     implementation(project(":feature_main"))
+    implementation(project(":core"))
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)

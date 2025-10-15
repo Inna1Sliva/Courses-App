@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.it.shka.core"
+    namespace = "com.it.shka.feature_main"
     compileSdk = 36
 
     defaultConfig {
@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

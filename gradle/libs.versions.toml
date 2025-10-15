@@ -17,7 +17,7 @@ hilt-version = "2.51.1"
 pagingCompose = "3.4.0-alpha02"
 pagingRuntimeVersion = "3.3.6"
 retrofitVersion = "2.9.0"
-roomRuntime = "2.7.2"
+roomRuntime = "2.8.2"
 
 [libraries]
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }

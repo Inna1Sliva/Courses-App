@@ -1,26 +1,19 @@
 package com.it.shka.feature_auth.data.repository
 
-import android.util.Log
+import com.it.shka.core.database.AppDatabase
+import com.it.shka.core.database.entity.UserIdEntity
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
-import com.it.shka.feature_auth.data.database.AppUserIdDatabase
-import com.it.shka.feature_auth.data.database.entity.UserIDEntity
-import com.it.shka.feature_auth.data.model.AuthStateResult
 import com.it.shka.feature_auth.data.model.User
 import com.it.shka.feature_auth.data.toDataEntity
 import com.it.shka.feature_auth.domain.AuthUserRepository
 import com.it.shka.feature_auth.domain.Result
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
-class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAuthUsers, private val db: AppUserIdDatabase) :
+class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAuthUsers, private val db: AppDatabase) :
     AuthUserRepository{
         private var stateValidEmail: Boolean = false
 
@@ -28,7 +21,8 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
     override suspend fun isEmailExists(email: String) : Boolean{
         return try {
             val userEmail =apiAuthUsers.checkEmail(email)
-            userEmail.email.isNotEmpty()
+            userEmail.email.isEmpty()
+            true
         } catch (e: Exception){
             e.printStackTrace()
             false
@@ -41,7 +35,7 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
         return Result(success = true)
     }
 
-    override suspend fun setDatabaseUserId(user: UserIDEntity): Result {
+    override suspend fun setDatabaseUserId(user: UserIdEntity): Result {
         db.userIdDao().setUserId(user)
         delay(2000)
         return Result(success = true)
@@ -53,7 +47,7 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
        }
     }
 
-    override fun insertUserRoom(user: UserIDEntity)=flow {
+    override fun insertUserRoom(user: UserIdEntity)=flow {
        val result = setDatabaseUserId(user)
         emit(result)
     }

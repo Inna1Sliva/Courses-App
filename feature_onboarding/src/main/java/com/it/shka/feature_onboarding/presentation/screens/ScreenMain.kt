@@ -38,12 +38,15 @@ fun ScreenMain(navHostController: NavHostController, mainContent:()-> Unit, navO
     val vm = hiltViewModel<MainViewModel>()
     val userIdState = vm.userIdState.collectAsState()
 
-        when(userIdState.value.authId?.isNotEmpty()){
+        when(userIdState.value.authId?.isEmpty()){
             true->{
                 mainContent
             }
+            false-> {
+             navHostController.navigate(RouteOnboarding.ScreenMainCourses.rout)
+            }
             else -> {
-             // navHostController.navigate(RouteOnboarding.ScreenMain.rout)
+
             }
         }
 

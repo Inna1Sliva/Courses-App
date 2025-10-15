@@ -1,6 +1,6 @@
 package com.it.shka.ourses_app.hilt
 
-import com.it.shka.core.data.api.ApiMainCourses
+import com.it.shka.feature_main.data.api.ApiMainCourses
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
 import dagger.Module
 import dagger.Provides

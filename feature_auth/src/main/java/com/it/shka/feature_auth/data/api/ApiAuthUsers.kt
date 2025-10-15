@@ -15,7 +15,7 @@ interface ApiAuthUsers {
   //  @GET("/users")
  // fun getCourses(): Call<List<Courses>>
   @POST("/users")
-  fun registerUser(@Body user: User) : Result
+ suspend fun registerUser(@Body user: User) : Result
   @GET("/users")
  suspend fun checkEmail(@Query("email") email: String): User
 

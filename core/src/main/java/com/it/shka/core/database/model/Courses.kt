@@ -1,0 +1,15 @@
+package com.it.shka.core.database.model
+
+data class Courses(
+    val id: Int,
+    val categori: String,
+    val title: String,
+    val text: String,
+    val price: String,
+    val rate: String,
+    val startDate: String,
+    val hasLike: Boolean,
+    val image: String,
+    val publishDate: String,
+    val destination: String
+)
