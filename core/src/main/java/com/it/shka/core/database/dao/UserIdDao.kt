@@ -7,8 +7,8 @@ import com.it.shka.core.database.entity.UserIdEntity
 
 @Dao
 interface UserIdDao {
-    @Query("SELECT * FROM userId" )
-    suspend fun getUserId(): UserIdEntity?
+    @Query("SELECT COUNT(*) FROM userId" )
+    suspend fun getUserId(): Int
     @Insert
     suspend fun setUserId(userId: UserIdEntity)
 }

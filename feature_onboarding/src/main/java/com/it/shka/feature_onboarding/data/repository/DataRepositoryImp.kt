@@ -7,7 +7,7 @@ import com.it.shka.feature_onboarding.domain.model.UserId
 import javax.inject.Inject
 
 class DataRepositoryImp @Inject constructor(private val db: AppDatabase): DataRepository {
-    override suspend fun getUserId(): UserId? {
-        return db.userIdDao().getUserId()?.toDomainUserId()
+    override suspend fun getUserId(): Int {
+        return db.userIdDao().getUserId()
     }
 }

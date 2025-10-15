@@ -20,7 +20,6 @@ fun AppNavigation(){
         NavigationScreenOnboarding(navController)
         }
         composable(RoutAppNavigation.ScreenAuthUser.rout){
-
             AuthNavigation()
         }
         composable(RoutAppNavigation.ScreenMainContent.rout) {

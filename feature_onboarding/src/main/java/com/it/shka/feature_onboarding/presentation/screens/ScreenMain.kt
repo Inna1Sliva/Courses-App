@@ -16,7 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,27 +30,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.it.shka.feature_onboarding.R
 import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
-import java.util.UUID
 
 @Composable
 fun ScreenMain(navHostController: NavHostController, mainContent:()-> Unit, navOnboardingController: NavHostController){
-    //val userId = UUID.randomUUID().toString()
     val vm = hiltViewModel<MainViewModel>()
-    val userIdState = vm.userIdState.collectAsState()
+    val startScreen by vm.startScreen
 
-        when(userIdState.value.authId?.isEmpty()){
-            true->{
+        when(startScreen){
+            StartScreen.Registration->  ScreenMainContent(navHostController)
+            StartScreen.Main-> mainContent
+            null->{
                 mainContent
             }
-            false-> {
-             navHostController.navigate(RouteOnboarding.ScreenMainCourses.rout)
-            }
-            else -> {
-
-            }
         }
+    }
 
-
+@Composable
+fun ScreenMainContent(navHostController: NavHostController){
     Column (modifier = Modifier
         .fillMaxSize()
         .background(Color.Black),
@@ -85,12 +81,12 @@ fun ScreenMain(navHostController: NavHostController, mainContent:()-> Unit, navO
             .background(color = colorResource(R.color.button), shape = RoundedCornerShape(100.dp)),
             onClick = {
                 navHostController.navigate(RouteOnboarding.ScreenAuthUser.rout){
-                 launchSingleTop = true
-                   popUpTo(navHostController.graph.startDestinationId){
-                       inclusive = true
-                   }
-               }
-                      },
+                    launchSingleTop = true
+                    popUpTo(navHostController.graph.startDestinationId){
+                        inclusive = true
+                    }
+                }
+            },
             colors =ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.button),
                 contentColor =  colorResource(R.color.button)
@@ -104,4 +100,5 @@ fun ScreenMain(navHostController: NavHostController, mainContent:()-> Unit, navO
             .fillMaxWidth()
             .height(15.dp))
 
-    }}
+    }
+}
