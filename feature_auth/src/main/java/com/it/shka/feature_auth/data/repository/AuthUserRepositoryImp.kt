@@ -18,15 +18,8 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
         private var stateValidEmail: Boolean = false
 
 
-    override suspend fun isEmailExists(email: String) : Boolean{
-        return try {
-            val userEmail =apiAuthUsers.checkEmail(email)
-            userEmail.email.isEmpty()
-            true
-        } catch (e: Exception){
-            e.printStackTrace()
-            false
-        }
+    override suspend fun getEmailServer(email: String) : User{
+        return apiAuthUsers.checkEmail(email)
     }
 
     override suspend fun setServerUser(user: User): Result {
@@ -73,9 +66,9 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
 
     override fun validatePassword(
         password: String,
-        repidPassword: String
+        repeatPassword: String
     ): Boolean {
-        return password != repidPassword
+        return password != repeatPassword
     }
 
 }

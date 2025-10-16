@@ -1,5 +1,6 @@
 package com.it.shka.feature_onboarding.presentation.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,17 +32,20 @@ import androidx.navigation.NavHostController
 import com.it.shka.feature_onboarding.R
 import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
-fun ScreenMain(navHostController: NavHostController, mainContent:()-> Unit, navOnboardingController: NavHostController){
+fun ScreenMain(navHostController: NavHostController, navOnboardingController: NavHostController){
     val vm = hiltViewModel<MainViewModel>()
     val startScreen by vm.startScreen
 
         when(startScreen){
             StartScreen.Registration->  ScreenMainContent(navHostController)
-            StartScreen.Main-> mainContent
-            null->{
-                mainContent
+            StartScreen.Main->  navHostController.navigate(RouteOnboarding.ScreenMainCourses.rout) {
+                popUpTo(navOnboardingController.graph.startDestinationId){
+                    inclusive = true
+                }
             }
+            null->{}
         }
     }
 

@@ -1,11 +1,9 @@
 package com.it.shka.feature_auth.presentation.screens
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_auth.data.model.User
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
-import com.it.shka.feature_auth.domain.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +16,7 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
     private val _authMessage = MutableStateFlow<String>("")
     val authMessage: StateFlow<String> get() = _authMessage
     private var state: Boolean = false
+    private var stateEmail: Boolean = false
     private val userId = UUID.randomUUID().toString()
 
 
@@ -33,16 +32,16 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
                     _authMessage.value =  "Некорректный формат почты"
                     //return
             }
-            repository.validatePassword(password,repeatPassword)->{
+            repository.validatePassword(password = password, repeatPassword = repeatPassword)->{
                 _authMessage.value = "Пароли не совпадают"
               //  return
             }
-         repository.isEmailExists(email)->{
+        isEmailExist(email = email)->{
                _authMessage.value = "Пользователь с такой почтой уже существует"
               // return
             }
 
-            seveNewUser(email,password)->{
+            seveNewUser(email=email,password=password)->{
                 _authMessage.value = "Ошибка регистрации"
 
             }
@@ -51,7 +50,17 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
         }
       }
     }
-
+    private fun isEmailExist(email: String): Boolean{
+        viewModelScope.launch {
+            try {
+                val emailServer = repository.getEmailServer(email)
+                stateEmail = emailServer.email==email
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+        return stateEmail
+    }
 
 
     private  fun seveNewUser(email: String, password: String): Boolean{

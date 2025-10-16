@@ -17,13 +17,7 @@ fun NavigationScreenOnboarding(navAppMain: NavHostController){
     ){
 
         composable(RouteOnboarding.ScreenMain.rout) {
-            ScreenMain(navAppMain, mainContent = {
-                navAppMain.navigate(RouteOnboarding.ScreenMainCourses.rout) {
-                    popUpTo(navController.graph.startDestinationId){
-                        inclusive = true
-                    }
-                }
-            }, navController )
+            ScreenMain(navAppMain, navController )
         }
     }
 }
