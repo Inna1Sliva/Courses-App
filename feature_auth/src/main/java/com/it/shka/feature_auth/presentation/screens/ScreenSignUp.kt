@@ -16,12 +16,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,6 +51,7 @@ import androidx.navigation.NavHostController
 import com.it.shka.feature_auth.presentation.screens.AuthUserViewModel
 import com.it.shka.feature_auth.R
 import com.it.shka.feature_auth.presentation.navigation.rout.RouteAuthScreens
+import kotlinx.coroutines.flow.update
 
 @Composable
 fun ScreenSignUp( navController: NavHostController){
@@ -58,6 +62,7 @@ fun ScreenSignUp( navController: NavHostController){
     var rapidPassword by remember { mutableStateOf("") }
     var rPasswordVisibility by remember { mutableStateOf(false) }
     var passwordVisibility by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
 
@@ -84,7 +89,7 @@ fun ScreenSignUp( navController: NavHostController){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 5.dp, bottom = 10.dp),
-                text = authMessage.value,
+                text = authMessage.value.message.toString(),
                 fontSize = 16.sp,
                 color = Color.Red
             )
@@ -243,28 +248,43 @@ fun ScreenSignUp( navController: NavHostController){
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(20.dp))
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .background(colorResource(R.color.button), shape = RoundedCornerShape(30.dp)),
-                onClick = {
-                  viewModel.registerUser(email.toString(), password,rapidPassword)
-                },
-
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = colorResource(R.color.button),
-                    containerColor = colorResource(R.color.button)
+            if (authMessage.value.loading){
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(width = 50.dp, height = 50.dp)
+                        .background(colorResource(R.color.button))
+                        .align(Alignment.CenterHorizontally)
                 )
-            ){
-                Text(
-                    text = "Регистрация",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Light,
-                    color = Color.White,
-                    fontStyle = FontStyle.Normal
-                )
+            }else {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .background(
+                            colorResource(R.color.button),
+                            shape = RoundedCornerShape(30.dp)
+                        ),
+                    onClick = {
+                        viewModel._authMessage.update { it.copy(loading = true, message = "") }
+                        viewModel.registerUser(email.toString(), password, rapidPassword, context = context)
 
+
+                    },
+
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = colorResource(R.color.button),
+                        containerColor = colorResource(R.color.button)
+                    )
+                ) {
+                    Text(
+                        text = "Регистрация",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Light,
+                        color = Color.White,
+                        fontStyle = FontStyle.Normal
+                    )
+
+                }
             }
             Row(modifier = Modifier
                 .padding(top = 10.dp)

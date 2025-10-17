@@ -5,7 +5,7 @@ import com.it.shka.feature_auth.data.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface AuthUserRepository {
-    suspend fun getEmailServer(email: String): User
+    suspend fun getEmailServer(): List<User>
     suspend fun setServerUser(user: User): Result
     suspend fun setDatabaseUserId(user: UserIdEntity): Result
     fun registerUser(user:User): Flow<Pair<Result, Result>>

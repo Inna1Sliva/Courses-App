@@ -18,8 +18,8 @@ class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAut
         private var stateValidEmail: Boolean = false
 
 
-    override suspend fun getEmailServer(email: String) : User{
-        return apiAuthUsers.checkEmail(email)
+    override suspend fun getEmailServer() : List<User>{
+        return apiAuthUsers.checkEmail()
     }
 
     override suspend fun setServerUser(user: User): Result {
