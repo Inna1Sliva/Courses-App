@@ -7,10 +7,6 @@
     <color name="button_ok_1">#F98509</color>
     <color name="button_ok_2">#F95D00</color>
     <color name="button">#12B956</color>
-
-
-
-
-
+    <color name="trackColorProgress">#12B956</color>
 
 </resources>

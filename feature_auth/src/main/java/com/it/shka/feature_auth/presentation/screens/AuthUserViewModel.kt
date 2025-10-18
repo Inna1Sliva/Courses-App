@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthUserViewModel @Inject constructor (private val repository: AuthUserRepositoryImp) : ViewModel(){
-    val _authMessage = MutableStateFlow(AuthStateResult())
+    private val _authMessage = MutableStateFlow(AuthStateResult())
     val authMessage: StateFlow<AuthStateResult> get() = _authMessage
     private val _userAll = mutableListOf<User>()
     val userAll: List<User> get() = _userAll
@@ -31,7 +31,7 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
     }
 
     fun registerUser(email: String, password: String, repeatPassword: String, context: Context){
-       //_authMessage.update { it.copy(loading = true, message = "") }
+       _authMessage.update { it.copy(loading = true, message = "") }
         viewModelScope.launch {
         when{
             email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() ->{
@@ -50,7 +50,7 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
                 _authMessage.update {it.copy(loading = false, message = context.getString(R.string.errorMessageAuth)) }
             }
         }
-       delay(5000)
+
       }
     }
     private fun isEmailExist(email: String): Boolean{

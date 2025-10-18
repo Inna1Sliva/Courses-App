@@ -20,6 +20,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -48,10 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.it.shka.feature_auth.presentation.screens.AuthUserViewModel
 import com.it.shka.feature_auth.R
 import com.it.shka.feature_auth.presentation.navigation.rout.RouteAuthScreens
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.delay
 
 @Composable
 fun ScreenSignUp( navController: NavHostController){
@@ -59,12 +59,21 @@ fun ScreenSignUp( navController: NavHostController){
     val authMessage = viewModel.authMessage.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var rapidPassword by remember { mutableStateOf("") }
+    var repeatPassword by remember { mutableStateOf("") }
     var rPasswordVisibility by remember { mutableStateOf(false) }
     var passwordVisibility by remember { mutableStateOf(false) }
+    var stateButtonAndProgress by remember { mutableStateOf(false) }
+    var onClickButton by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-
+    LaunchedEffect(onClickButton) {
+        delay(4000L)
+        if (onClickButton){
+            viewModel.registerUser(email = email, password = password, repeatPassword =repeatPassword, context )
+            onClickButton = false
+            stateButtonAndProgress = false
+        }
+    }
 
     Box (modifier = Modifier
         .fillMaxSize()
@@ -83,7 +92,6 @@ fun ScreenSignUp( navController: NavHostController){
                 text = "Регистрация",
                 fontSize = 28.sp,
                 color = Color.White
-
             )
             Text(
                 modifier = Modifier
@@ -197,9 +205,9 @@ fun ScreenSignUp( navController: NavHostController){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 5.dp, bottom = 10.dp),
-                value = rapidPassword,
+                value = repeatPassword,
                 onValueChange = {
-                   rapidPassword= it
+                   repeatPassword= it
                 },
                 trailingIcon = {
                     IconButton(
@@ -248,12 +256,14 @@ fun ScreenSignUp( navController: NavHostController){
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(20.dp))
-            if (authMessage.value.loading){
+            if (stateButtonAndProgress){
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(width = 50.dp, height = 50.dp)
-                        .background(colorResource(R.color.button))
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
+                    trackColor = colorResource(R.color.Stroke),
+                    color = colorResource(R.color.button),
+                    strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap
                 )
             }else {
                 Button(
@@ -265,11 +275,9 @@ fun ScreenSignUp( navController: NavHostController){
                             shape = RoundedCornerShape(30.dp)
                         ),
                     onClick = {
-                        viewModel._authMessage.update { it.copy(loading = true, message = "") }
-                        viewModel.registerUser(email.toString(), password, rapidPassword, context = context)
-
-
-                    },
+                        onClickButton = true
+                        stateButtonAndProgress = true
+                              },
 
                     colors = ButtonDefaults.buttonColors(
                         contentColor = colorResource(R.color.button),
@@ -371,18 +379,7 @@ fun ScreenSignUp( navController: NavHostController){
 
                    )
                }
-
-
             }
-
-
         }
     }
-
-
-
-
-
-
-
 }
