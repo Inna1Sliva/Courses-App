@@ -1,6 +1,9 @@
-package com.it.shka.feature_auth.presentation.screens
+package com.it.shka.feature_auth.presentation.screens.signUp
 
+import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_auth.R
@@ -8,10 +11,8 @@ import com.it.shka.feature_auth.data.model.User
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
 import com.it.shka.feature_auth.presentation.model.AuthStateResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -21,6 +22,8 @@ import javax.inject.Inject
 class AuthUserViewModel @Inject constructor (private val repository: AuthUserRepositoryImp) : ViewModel(){
     private val _authMessage = MutableStateFlow(AuthStateResult())
     val authMessage: StateFlow<AuthStateResult> get() = _authMessage
+    private val _startScreen = mutableStateOf<StartScreen?>(null)
+    val startScreen: State<StartScreen?> = _startScreen
     private val _userAll = mutableListOf<User>()
     val userAll: List<User> get() = _userAll
     private var state: Boolean = false
@@ -31,23 +34,23 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
     }
 
     fun registerUser(email: String, password: String, repeatPassword: String, context: Context){
-       _authMessage.update { it.copy(loading = true, message = "") }
         viewModelScope.launch {
-        when{
+            _authMessage.value.message = ""
+            when{
             email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() ->{
-                _authMessage.update { it.copy(loading = false, message = context.getString( R.string.errorMessageEmpty)) }
+                _authMessage.update { it.copy( message = context.getString( R.string.errorMessageEmpty)) }
             }
             repository.validateEmail(email = email)->{
-                _authMessage.update { it.copy(loading = false, message = context.getString(R.string.errorMessageValidateEmail)) }
+                _authMessage.update { it.copy( message = context.getString(R.string.errorMessageValidateEmail)) }
             }
             repository.validatePassword(password = password, repeatPassword = repeatPassword)->{
-                _authMessage.update {it.copy(loading = false, message = context.getString(R.string.errorMessageValidatePassword))}
+                _authMessage.update {it.copy( message = context.getString(R.string.errorMessageValidatePassword))}
             }
             isEmailExist(email = email)->{
-               _authMessage.update {it.copy(loading = false, message = context.getString(R.string.errorMessageEmailExist))}
+               _authMessage.update {it.copy( message = context.getString(R.string.errorMessageEmailExist))}
             }
             setNewUser(email=email,password=password)->{
-                _authMessage.update {it.copy(loading = false, message = context.getString(R.string.errorMessageAuth)) }
+                _authMessage.update {it.copy( message = context.getString(R.string.errorMessageAuth)) }
             }
         }
 
@@ -57,6 +60,7 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
         return userAll.any { it.email.equals(email,ignoreCase = true) }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private  fun setNewUser(email: String, password: String): Boolean{
         try {
             viewModelScope.launch {
@@ -65,6 +69,7 @@ class AuthUserViewModel @Inject constructor (private val repository: AuthUserRep
                     .collect { (resultServer, resultRoom) ->
                       resultServer.success to resultRoom.success
                         state = resultServer.success
+                        _startScreen.value= StartScreen.Main
                     }
             }
 

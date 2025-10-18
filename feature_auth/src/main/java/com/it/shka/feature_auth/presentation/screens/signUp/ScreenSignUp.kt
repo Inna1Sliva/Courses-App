@@ -1,4 +1,4 @@
-package com.it.shka.feature_auth.presentation.screens
+package com.it.shka.feature_auth.presentation.screens.signUp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,12 +51,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.it.shka.feature_auth.R
 import com.it.shka.feature_auth.presentation.navigation.rout.RouteAuthScreens
+import com.it.shka.feature_auth.presentation.screens.signUp.AuthUserViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun ScreenSignUp( navController: NavHostController){
+fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostController){
     val viewModel = hiltViewModel<AuthUserViewModel>()
     val authMessage = viewModel.authMessage.collectAsState()
+    val startScreen by viewModel.startScreen
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
@@ -73,6 +75,15 @@ fun ScreenSignUp( navController: NavHostController){
             onClickButton = false
             stateButtonAndProgress = false
         }
+    }
+    when(startScreen){
+       // StartScreen.Registration ->ScreenSignUpContent()
+        StartScreen.Main -> appNavigation.navigate(RouteAuthScreens.ScreenMainContent.rout){
+            popUpTo(navController.graph.startDestinationId){
+                inclusive = true
+            }
+        }
+        null->{}
     }
 
     Box (modifier = Modifier
@@ -382,4 +393,8 @@ fun ScreenSignUp( navController: NavHostController){
             }
         }
     }
+}
+@Composable
+fun ScreenSignUpContent(){
+
 }

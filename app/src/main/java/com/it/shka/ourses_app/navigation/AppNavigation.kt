@@ -11,16 +11,16 @@ import com.it.shka.ourses_app.navigation.rout.RoutAppNavigation
 
 @Composable
 fun AppNavigation(){
-    val navController = rememberNavController()
+    val navAppNavigationController = rememberNavController()
     NavHost(
-        navController = navController,
+        navController = navAppNavigationController,
         startDestination = RoutAppNavigation.ScreenStartOnboarding.rout
     ){
          composable (RoutAppNavigation.ScreenStartOnboarding.rout){
-        NavigationScreenOnboarding(navController)
+        NavigationScreenOnboarding(navAppNavigationController)
         }
         composable(RoutAppNavigation.ScreenAuthUser.rout){
-            AuthNavigation()
+            AuthNavigation(navAppNavigationController)
         }
         composable(RoutAppNavigation.ScreenMainContent.rout) {
             RootNavGraphMainContent()
