@@ -100,7 +100,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                 .height(140.dp))
             Text(modifier = Modifier
                 .padding(bottom = 20.dp),
-                text = "Регистрация",
+                text = stringResource(R.string.registration),
                 fontSize = 28.sp,
                 color = Color.White
             )
@@ -130,7 +130,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                 textStyle = TextStyle(fontSize = 14.sp, color = Color.White),
                 placeholder = {
                     Text(
-                        text = "Введите почту",
+                        text = stringResource(R.string.enter_your_email_address),
                         fontSize = 14.sp,
                         color = colorResource(R.color.placholder)
                     )
@@ -148,7 +148,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             Text(
-                text = "Пароль",
+                text = stringResource(R.string.password),
                 fontSize = 16.sp,
                 color = Color.White
 
@@ -188,7 +188,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                 textStyle = TextStyle(fontSize = 14.sp, color = Color.White),
                 placeholder = {
                     Text(
-                        text = "Введите пароль",
+                        text = stringResource(R.string.enter_your_password),
                         fontSize = 14.sp,
                         color = colorResource(R.color.placholder)
                     )
@@ -206,7 +206,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
             Text(
-                text = "Повторить пароль",
+                text = stringResource(R.string.repeat_password),
                 fontSize = 16.sp,
                 color = Color.White
 
@@ -247,7 +247,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                 textStyle = TextStyle(fontSize = 14.sp, color = Color.White),
                 placeholder = {
                     Text(
-                        text = "Введите пароль ещё раз",
+                        text = stringResource(R.string.enter_your_password_again),
                         fontSize = 14.sp,
                         color = colorResource(R.color.placholder)
                     )
@@ -296,7 +296,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                     )
                 ) {
                     Text(
-                        text = "Регистрация",
+                        text = stringResource(R.string.registration),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Light,
                         color = Color.White,
