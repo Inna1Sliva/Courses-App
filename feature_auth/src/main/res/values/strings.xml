@@ -1,8 +1,14 @@
 <resources>
     <string name="text_signIn">Уже есть аккаунт?</string>
     <string name="signIn">Войти</string>
+    <string name="recover">Восстановить</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_your_password">Забыли пароль?</string>
+    <string name="enter_your_password">Введите пароль</string>
+    <string name="email">Email</string>
+    <string name="enter_your_email_address">Введите почту</string>
     <string name="resume">Продолжить</string>
-        <string name="errorMessageEmpty">Пожалуйста, заполните все поля</string>
+    <string name="errorMessageEmpty">Пожалуйста, заполните все поля</string>
     <string name="errorMessageValidateEmail">Некорректный формат почты</string>
     <string name="errorMessageValidatePassword">Пароли не совпадают</string>
     <string name="errorMessageEmailExist">Пользователь с такой почтой уже существует</string>

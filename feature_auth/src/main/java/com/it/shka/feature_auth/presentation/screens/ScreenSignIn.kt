@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -59,13 +60,13 @@ fun ScreenSignIn(){
                 .height(140.dp))
             Text(modifier = Modifier
                 .padding(bottom = 20.dp),
-                text = "Вход",
+                text = stringResource(R.string.signIn),
                 fontSize = 28.sp,
                 color = Color.White
 
             )
             Text(
-                text = "Email",
+                text = stringResource(R.string.email),
                 fontSize = 16.sp,
                 color = Color.White
 
@@ -82,7 +83,7 @@ fun ScreenSignIn(){
                 textStyle = TextStyle(fontSize = 14.sp, color = Color.White),
                 placeholder = {
                     Text(
-                        text = "Введите почту",
+                        text = stringResource(R.string.enter_your_email_address),
                         fontSize = 14.sp,
                         color = colorResource(R.color.placholder)
                     )
@@ -100,7 +101,7 @@ fun ScreenSignIn(){
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             Text(
-                text = "Пароль",
+                text = stringResource(R.string.password),
                 fontSize = 16.sp,
                 color = Color.White
 
@@ -118,7 +119,7 @@ fun ScreenSignIn(){
                 textStyle = TextStyle(fontSize = 14.sp, color = Color.White),
                 placeholder = {
                     Text(
-                        text = "Введите пароль",
+                        text = stringResource(R.string.enter_your_password),
                         fontSize = 14.sp,
                         color = colorResource(R.color.placholder)
                     )
@@ -154,7 +155,7 @@ fun ScreenSignIn(){
                 )
             ){
                 Text(
-                    text = "Вход",
+                    text = stringResource(R.string.signIn),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Light,
                     color = Color.White,
@@ -168,14 +169,14 @@ fun ScreenSignIn(){
                 horizontalArrangement = Arrangement.Center
             ){
                Text(
-                   text = "Забыли пароль?",
+                   text = stringResource(R.string.forgot_your_password),
                    fontSize = 12.sp,
                    color = Color.White
                )
                 Text(
                     modifier = Modifier
                         .padding(start = 5.dp),
-                    text = "Восстановить",
+                    text = stringResource(R.string.recover),
                     fontSize = 12.sp,
                     color = colorResource(R.color.button)
                 )
@@ -235,15 +236,7 @@ fun ScreenSignIn(){
 
                     )
                 }
-
-
             }
-
-
         }
     }
-
-
-
-
 }
