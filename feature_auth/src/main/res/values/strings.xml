@@ -1,7 +1,8 @@
 <resources>
     <string name="text_signIn">Уже есть аккаунт?</string>
     <string name="signIn">Войти</string>
-    <string name="errorMessageEmpty">Пожалуйста, заполните все поля</string>
+    <string name="resume">Продолжить</string>
+        <string name="errorMessageEmpty">Пожалуйста, заполните все поля</string>
     <string name="errorMessageValidateEmail">Некорректный формат почты</string>
     <string name="errorMessageValidatePassword">Пароли не совпадают</string>
     <string name="errorMessageEmailExist">Пользователь с такой почтой уже существует</string>

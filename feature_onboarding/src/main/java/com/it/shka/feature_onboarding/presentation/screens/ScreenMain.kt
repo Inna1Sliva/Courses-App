@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,7 +64,7 @@ fun ScreenMainContent(navHostController: NavHostController){
             modifier = Modifier
                 .padding(top = 130.dp)
                 .size(width = 285.dp, height = 72.dp),
-            text = "Тысячи курсов \nв одном месте",
+            text = stringResource(R.string.title),
             fontSize = 28.sp,
             color = Color.White,
             textAlign = TextAlign.Center
@@ -95,7 +96,7 @@ fun ScreenMainContent(navHostController: NavHostController){
                 containerColor = colorResource(R.color.button),
                 contentColor =  colorResource(R.color.button)
             )) {
-            Text(text = "Продолжить",
+            Text(text = stringResource(R.string.resume),
                 color = Color.White,
                 fontSize = 14.sp)
 
