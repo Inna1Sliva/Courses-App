@@ -25,21 +25,23 @@ fun PageDto.toDomainPage(): Page{
     pages = this.pages
    )
 }
-fun CoursesProfileDto.toDomainCoursesProfile(): CoursesProfile{
-    return CoursesProfile(
-        id = this.id,
-        category = this.category,
-        title = this.title,
-        text = this.text,
-        price = this.price,
-        rate= this.rate,
-        startDate = this.startDate,
-        hasLike = this.hasLike,
-        image = this.image,
-        publishDate = this.publishDate,
-        destination = this.destination,
-        cours = this.cours.toDomainCourse()
-    )
+fun List<CoursesProfileDto>.toDomainCoursesProfile(): List<CoursesProfile>{
+    return this.map {
+        CoursesProfile(
+            id = it.id,
+            category = it.category,
+            title = it.title,
+            text = it.text,
+            price = it.price,
+            rate= it.rate,
+            startDate = it.startDate,
+            hasLike = it.hasLike,
+            image = it.image,
+            publishDate = it.publishDate,
+            destination = it.destination,
+            cours = it.cours.toDomainCourse()
+        )
+    }
 }
 fun List<CourseDto>.toDomainCourse(): List<Course>{
     return this.map { courseDto ->

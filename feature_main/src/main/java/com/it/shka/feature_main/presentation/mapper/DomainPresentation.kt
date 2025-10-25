@@ -12,21 +12,23 @@ import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 import com.it.shka.feature_main.presentation.model.SubtopicUi
 import com.it.shka.feature_main.presentation.model.TheoryUi
 
-fun CoursesProfile.toDomainCoursesProfile(): CoursesProfileUi{
-    return CoursesProfileUi(
-        id = this.id,
-        category = this.category,
-        title = this.title,
-        text = this.text,
-        price = this.price,
-        rate= this.rate,
-        startDate = this.startDate,
-        hasLike = this.hasLike,
-        image = this.image,
-        publishDate = this.publishDate,
-        destination = this.destination,
-        cours = this.cours.toDomainCourses()
-    )
+fun List<CoursesProfile>.toDomainCoursesProfile(): List<CoursesProfileUi>{
+    return this.map {coursesProfile ->
+        CoursesProfileUi(
+            id = coursesProfile.id,
+            category = coursesProfile.category,
+            title =coursesProfile.title,
+            text = coursesProfile.text,
+            price =coursesProfile.price,
+            rate= coursesProfile.rate,
+            startDate = coursesProfile.startDate,
+            hasLike = coursesProfile.hasLike,
+            image = coursesProfile.image,
+            publishDate = coursesProfile.publishDate,
+            destination = coursesProfile.destination,
+            cours = coursesProfile.cours.toDomainCourses()
+        )
+    }
 }
 fun List<Course>.toDomainCourses(): List<CourseUi>{
     return this.map { course ->

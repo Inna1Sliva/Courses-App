@@ -5,6 +5,7 @@ import com.it.shka.feature_main.data.repository.MainCoursesRepositoryImp
 import com.it.shka.feature_main.data.api.ApiMainCourses
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
+import com.it.shka.feature_main.data.repository.ProfileUserRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,11 @@ object ModuleNetwork {
     @Singleton
     fun provideMainCoursesRepository(apiMainCourses: ApiMainCourses, database: AppDatabase): MainCoursesRepositoryImp{
         return MainCoursesRepositoryImp(apiMainCourses,database )
+    }
+    @Provides
+    @Singleton
+    fun provideProfileUserRepository(apiMainCourses: ApiMainCourses): ProfileUserRepositoryImp{
+        return ProfileUserRepositoryImp(apiMainCourses)
     }
 
 }
