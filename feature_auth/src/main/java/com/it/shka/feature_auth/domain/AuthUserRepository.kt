@@ -1,6 +1,6 @@
 package com.it.shka.feature_auth.domain
 
-import com.it.shka.core.database.entity.UserIdEntity
+import com.it.shka.core.database.data.entity.UserIdEntity
 import com.it.shka.feature_auth.data.model.User
 import kotlinx.coroutines.flow.Flow
 

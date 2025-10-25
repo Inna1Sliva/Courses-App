@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,7 +40,7 @@ fun ScreenProfile(){
                 .padding(top = 50.dp, start = 10.dp, end = 10.dp)
         ) {
             Text(
-                text = "Профиль",
+                text = stringResource(R.string.profile),
                 color = Color.White,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.W400
@@ -57,7 +58,7 @@ fun ScreenProfile(){
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
                     Text(
-                        text = "Написать в поддержку",
+                        text = stringResource(R.string.Write_to_support),
                         fontSize = 14.sp,
                         color = Color.White,
                         fontWeight = FontWeight.W500
@@ -88,7 +89,7 @@ fun ScreenProfile(){
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
                     Text(
-                        text = "Настройки",
+                        text = stringResource(R.string.Settings),
                         fontSize = 14.sp,
                         color = Color.White,
                         fontWeight = FontWeight.W500
@@ -119,7 +120,7 @@ fun ScreenProfile(){
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
                     Text(
-                        text = "Выйти из аккаунта",
+                        text = stringResource(R.string.Log_out_of_your_account),
                         fontSize = 14.sp,
                         color = Color.White,
                         fontWeight = FontWeight.W500
@@ -141,7 +142,7 @@ fun ScreenProfile(){
             Text(
                 modifier = Modifier
                     .padding(start = 10.dp, top = 20.dp, end = 10.dp),
-                text = "Ваши курсы",
+                text = stringResource(R.string.Your_courses),
                 fontSize = 22.sp,
                 color = Color.White,
                 fontWeight = FontWeight.W400

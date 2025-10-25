@@ -63,13 +63,11 @@ fun ScreenSignIn(){
                 text = stringResource(R.string.signIn),
                 fontSize = 28.sp,
                 color = Color.White
-
             )
             Text(
                 text = stringResource(R.string.email),
                 fontSize = 16.sp,
                 color = Color.White
-
             )
             OutlinedTextField(
                 modifier = Modifier

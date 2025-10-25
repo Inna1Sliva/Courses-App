@@ -1,11 +1,10 @@
 package com.it.shka.feature_main.data.mapper
 
-import com.it.shka.core.database.entity.CoursesEntity
+import com.it.shka.core.database.data.entity.CoursesEntity
 import com.it.shka.feature_main.data.model.CoursesDto
 import com.it.shka.feature_main.data.model.PageDto
 import com.it.shka.feature_main.domain.model.Courses
 import com.it.shka.feature_main.domain.model.Page
-import com.it.shka.feature_main.presentation.model.CoursesModel
 
 
 fun PageDto.toDomainPage(): Page{

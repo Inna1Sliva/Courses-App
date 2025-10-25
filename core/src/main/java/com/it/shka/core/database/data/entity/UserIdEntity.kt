@@ -1,4 +1,4 @@
-package com.it.shka.core.database.entity
+package com.it.shka.core.database.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

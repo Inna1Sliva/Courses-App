@@ -1,7 +1,7 @@
 package com.it.shka.feature_main.data.repository
 
 
-import com.it.shka.core.database.AppDatabase
+import com.it.shka.core.database.data.AppDatabase
 import com.it.shka.feature_main.data.api.ApiMainCourses
 import com.it.shka.feature_main.data.mapper.toCourses
 import com.it.shka.feature_main.data.mapper.toDomainCourses

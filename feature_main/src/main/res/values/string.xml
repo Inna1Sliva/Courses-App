@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile">Профиль</string>
+    <string name="Write_to_support">Написать в поддержку</string>
+    <string name="Settings">Настройки</string>
+    <string name="Log_out_of_your_account">Выйти из аккаунта</string>
+    <string name="Your_courses">Ваши курсы</string>
+
+</resources>

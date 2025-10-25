@@ -2,7 +2,7 @@ package com.it.shka.ourses_app.hilt
 
 import android.content.Context
 import androidx.room.Room
-import com.it.shka.core.database.AppDatabase
+import com.it.shka.core.database.data.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

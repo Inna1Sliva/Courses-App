@@ -1,7 +1,7 @@
 package com.it.shka.feature_auth.data.repository
 
-import com.it.shka.core.database.AppDatabase
-import com.it.shka.core.database.entity.UserIdEntity
+import com.it.shka.core.database.data.AppDatabase
+import com.it.shka.core.database.data.entity.UserIdEntity
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
 import com.it.shka.feature_auth.data.model.User
 import com.it.shka.feature_auth.data.toDataEntity

@@ -1,6 +1,6 @@
 package com.it.shka.feature_auth.data
 
-import com.it.shka.core.database.entity.UserIdEntity
+import com.it.shka.core.database.data.entity.UserIdEntity
 import com.it.shka.feature_auth.data.model.User
 
 fun User.toDataEntity(): UserIdEntity {

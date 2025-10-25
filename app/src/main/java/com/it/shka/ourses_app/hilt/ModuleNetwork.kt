@@ -1,6 +1,6 @@
 package com.it.shka.ourses_app.hilt
 
-import com.it.shka.core.database.AppDatabase
+import com.it.shka.core.database.data.AppDatabase
 import com.it.shka.feature_main.data.repository.MainCoursesRepositoryImp
 import com.it.shka.feature_main.data.api.ApiMainCourses
 import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
