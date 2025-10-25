@@ -1,5 +1,7 @@
 package com.it.shka.feature_main.domain
 
-interface ProfileUserRepository {
+import com.it.shka.feature_main.domain.model.CoursesProfile
 
+interface ProfileUserRepository {
+    suspend fun getCoursesProfile(): CoursesProfile
 }
