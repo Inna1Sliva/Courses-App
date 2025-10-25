@@ -1,9 +1,67 @@
 package com.it.shka.feature_main.presentation.mapper
 
+
+import com.it.shka.feature_main.domain.model.Course
 import com.it.shka.feature_main.domain.model.Courses
+import com.it.shka.feature_main.domain.model.CoursesProfile
+import com.it.shka.feature_main.domain.model.Subtopic
+import com.it.shka.feature_main.domain.model.Theory
+import com.it.shka.feature_main.presentation.model.CourseUi
 import com.it.shka.feature_main.presentation.model.CoursesModel
+import com.it.shka.feature_main.presentation.model.CoursesProfileUi
+import com.it.shka.feature_main.presentation.model.SubtopicUi
+import com.it.shka.feature_main.presentation.model.TheoryUi
 
+fun CoursesProfile.toDomainCoursesProfile(): CoursesProfileUi{
+    return CoursesProfileUi(
+        id = this.id,
+        category = this.category,
+        title = this.title,
+        text = this.text,
+        price = this.price,
+        rate= this.rate,
+        startDate = this.startDate,
+        hasLike = this.hasLike,
+        image = this.image,
+        publishDate = this.publishDate,
+        destination = this.destination,
+        cours = this.cours.toDomainCourses()
+    )
+}
+fun List<Course>.toDomainCourses(): List<CourseUi>{
+    return this.map { course ->
+        CourseUi(
+            id = course.id,
+            main_topic = course.main_topic,
+            status = course.status,
+            subtopics = course.subtopics.toDomainSubtopic()
+        )
+    }
+}
+fun List<Subtopic>.toDomainSubtopic(): List<SubtopicUi>{
+    return this.map {subtopicDto ->
+        SubtopicUi(
+            id = subtopicDto.id,
+            subtopic_id = subtopicDto.subtopic_id,
+            title = subtopicDto.title,
+            theory = subtopicDto.theory.toDomainTheory()
+        )
+    }
+}
+fun List<Theory>.toDomainTheory(): List<TheoryUi>{
+    return this.map { theoryDto ->
+        TheoryUi(
+            id = theoryDto.id,
+            topic = theoryDto.topic,
+            title = theoryDto.title,
+            status = theoryDto.status,
+            description = theoryDto.description,
+            options = theoryDto.options,
+            correct_option = theoryDto.correct_option
 
+        )
+    }
+}
 fun List<Courses>.toDomain(favoriteIds: Set<Int>): List<CoursesModel> {
     return this.map {
         CoursesModel(
