@@ -2,6 +2,7 @@ package com.it.shka.feature_main.data.api
 
 import com.it.shka.feature_main.data.model.CoursesProfileDto
 import com.it.shka.feature_main.data.model.PageDto
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 import retrofit2.http.Query
 
