@@ -59,6 +59,8 @@ fun ScreenProfileContent(uiState: ProfileInfoState) {
                 .padding(top = 50.dp, start = 10.dp, end = 10.dp)
         ) {
             Text(
+                modifier = Modifier
+                    .padding(top = 10.dp),
                 text = stringResource(R.string.profile),
                 color = Color.White,
                 fontSize = 22.sp,
@@ -172,7 +174,7 @@ fun ScreenProfileContent(uiState: ProfileInfoState) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding( 10.dp)
             ) {
                 items(listOf(uiState.course)) {
                     it?.forEach {
