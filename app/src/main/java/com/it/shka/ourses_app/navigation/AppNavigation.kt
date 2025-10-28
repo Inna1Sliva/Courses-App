@@ -14,7 +14,7 @@ fun AppNavigation(){
     val navAppNavigationController = rememberNavController()
     NavHost(
         navController = navAppNavigationController,
-        startDestination = RoutAppNavigation.ScreenStartOnboarding.rout
+        startDestination = RoutAppNavigation.ScreenMainContent.rout
     ){
          composable (RoutAppNavigation.ScreenStartOnboarding.rout){
         NavigationScreenOnboarding(navAppNavigationController)

@@ -1,5 +1,6 @@
 package com.it.shka.feature_main.presentation.screens.profileinfo
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,15 +19,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CourseUi
 
 @Composable
-fun ScreenCourse(){
-val viewModel = hiltViewModel<MainProfileViewModel>()
-    val courseUi = viewModel.courseUi.collectAsState()
+fun ScreenCourse(viewModel: MainProfileViewModel){
+    val courseUi = viewModel.courseUiState.collectAsState()
+    courseUi.value.forEach {
+        Log.e("Text", "${it.main_topic}")
+        Text(
+            modifier = Modifier
+                .fillMaxSize(),
+text = it.main_topic,
+            color = Color.White,
+            fontSize = 12.sp
+        )
+    }
 
+
+
+}
+@Composable
+fun ScreenCourseContent(courseUi: List<CourseUi>){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -37,8 +51,8 @@ val viewModel = hiltViewModel<MainProfileViewModel>()
                 .padding(top=10.dp)
         ) {
 
-            items(courseUi.value) { course ->
-               MenuListCourse(course)
+            items(courseUi) { course ->
+                MenuListCourse(course)
 
             }
 

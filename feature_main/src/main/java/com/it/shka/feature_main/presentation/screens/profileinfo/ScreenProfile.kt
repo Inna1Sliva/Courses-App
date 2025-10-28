@@ -19,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,9 +38,9 @@ import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 
 @Composable
-fun ScreenProfile(navControllerProfile : NavController){
-val viewModel = hiltViewModel<MainProfileViewModel>()
+fun ScreenProfile(viewModel: MainProfileViewModel, navControllerProfile : NavController){
     val uiState by remember { viewModel.viewModelState }.collectAsState()
+
     when{
         uiState.isLoading -> LoadingProfile()
         uiState.course != null -> ScreenProfileContent(uiState, navControllerProfile)

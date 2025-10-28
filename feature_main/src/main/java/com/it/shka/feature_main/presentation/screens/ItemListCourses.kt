@@ -206,7 +206,7 @@ fun ItemListCourses(modifier: Modifier, courses: CoursesModel, navHostController
                 Text(
                     modifier= Modifier
                         .clickable{
-                           // mainCoursesViewModel.setDetailCourses(courses)
+                            mainCoursesViewModel.setDetailCourses(courses)
                             navHostController.navigate(RoutScreenMain.ScreenMainDetail.rout)
                                   },
                     text = "Подробнее",
