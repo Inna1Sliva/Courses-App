@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_main.data.repository.ProfileUserRepositoryImp
 import com.it.shka.feature_main.presentation.mapper.toDomainCoursesProfile
+import com.it.shka.feature_main.presentation.model.CourseUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,8 @@ import javax.inject.Inject
 class MainProfileViewModel @Inject constructor(private val repository: ProfileUserRepositoryImp): ViewModel() {
     private val _viewModelState = MutableStateFlow(ProfileInfoState())
     val viewModelState: StateFlow<ProfileInfoState> get()=_viewModelState
+    private val _courseUi = MutableStateFlow<List<CourseUi>>(emptyList())
+    val courseUi: StateFlow<List<CourseUi>> get() = _courseUi
     init {
         viewModelScope.launch {
             delay(2000)
@@ -29,6 +32,11 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
                 _viewModelState.update {it.copy(error = true)
                 }
             }
+        }
+    }
+    fun setCourseUi(courseUi: List<CourseUi>){
+        viewModelScope.launch {
+            _courseUi.value = courseUi
         }
     }
 }

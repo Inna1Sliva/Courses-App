@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.it.shka.feature_main.presentation.route.RoutScreenProfile
+import com.it.shka.feature_main.presentation.screens.profileinfo.ScreenCourse
 import com.it.shka.feature_main.presentation.screens.profileinfo.ScreenProfile
 
 @Composable
@@ -16,6 +17,9 @@ val navController = rememberNavController()
     ){
         composable(RoutScreenProfile.ScreenProfile.rout){
             ScreenProfile()
+        }
+        composable(RoutScreenProfile.ScreenCourse.rout){
+            ScreenCourse()
         }
     }
 }

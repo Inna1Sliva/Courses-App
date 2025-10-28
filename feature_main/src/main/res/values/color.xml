@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#000000</color>
     <color name="LightGray">#32333A</color>
     <color name="placholder">#777778</color>
     <color name="Stroke">#494A50</color>
