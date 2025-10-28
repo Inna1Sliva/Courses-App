@@ -2,6 +2,7 @@ package com.it.shka.feature_main.presentation.screens.profileinfo
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,21 +47,19 @@ fun ScreenCourseContent(courseUi: List<CoursesProfileUi>){
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(top=30.dp)
             .background(color = colorResource(R.color.black))){
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top=10.dp)
+                .padding(10.dp)
         ) {
-courseUi.forEach {coursesProfileUi ->
-    items(coursesProfileUi.cours) { course ->
+            courseUi.forEach {coursesProfileUi ->
+                  items(coursesProfileUi.cours) { course ->
         MenuListCourse(course)
 
-    }
-}
-
-
-
+             }
+        }
         }
     }
 }
@@ -77,6 +77,8 @@ fun MenuListCourse(courseUi: CourseUi){
                .background(color = colorResource(R.color.black))
        ) {
            Text(
+               modifier = Modifier
+                   .padding(end = 5.dp),
                text = courseUi.id.toString(),
                color = Color.White,
                fontSize = 12.sp
@@ -88,6 +90,35 @@ fun MenuListCourse(courseUi: CourseUi){
            )
 
        }
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize()
+                .background(color = colorResource(R.color.LightGray))
+                  ) {
+            courseUi.subtopics.forEach {subtopicUi ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        modifier = Modifier
+                        .padding(end = 5.dp),
+                        text = subtopicUi.subtopic_id,
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                    Text(
+                        text = subtopicUi.title,
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+
+            }
+
+        }
     }
 }
 @Composable
