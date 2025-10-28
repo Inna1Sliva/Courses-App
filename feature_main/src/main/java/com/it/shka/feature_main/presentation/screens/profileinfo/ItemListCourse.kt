@@ -50,7 +50,7 @@ fun ItemListCourse(navController: NavController, course: CoursesProfileUi,){
         modifier = Modifier
             .fillMaxWidth()
             .clickable{
-                viewModel.setCourseUi(course.cours)
+                viewModel.setCourseUi(course.id)
                 navController.navigate(RoutScreenProfile.ScreenCourse.rout)
             }
             .padding(bottom = 10.dp)

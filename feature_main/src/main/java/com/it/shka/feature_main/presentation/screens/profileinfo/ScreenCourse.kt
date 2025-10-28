@@ -9,11 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -21,26 +26,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CourseUi
+import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 
 @Composable
 fun ScreenCourse(viewModel: MainProfileViewModel){
-    val courseUi = viewModel.courseUiState.collectAsState()
-    courseUi.value.forEach {
-        Log.e("Text", "${it.main_topic}")
-        Text(
-            modifier = Modifier
-                .fillMaxSize(),
-text = it.main_topic,
-            color = Color.White,
-            fontSize = 12.sp
-        )
-    }
+    val courseUi by remember { viewModel.viewModelState}.collectAsState()
+  when{
+      courseUi.isLoading-> Loader()
+      courseUi.course != null -> ScreenCourseContent(courseUi.course!!)
+      courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
+  }
 
 
 
 }
 @Composable
-fun ScreenCourseContent(courseUi: List<CourseUi>){
+fun ScreenCourseContent(courseUi: List<CoursesProfileUi>){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,11 +51,13 @@ fun ScreenCourseContent(courseUi: List<CourseUi>){
                 .fillMaxSize()
                 .padding(top=10.dp)
         ) {
+courseUi.forEach {coursesProfileUi ->
+    items(coursesProfileUi.cours) { course ->
+        MenuListCourse(course)
 
-            items(courseUi) { course ->
-                MenuListCourse(course)
+    }
+}
 
-            }
 
 
         }
@@ -85,5 +88,20 @@ fun MenuListCourse(courseUi: CourseUi){
            )
 
        }
+    }
+}
+@Composable
+fun Loader(){
+    Box (
+        modifier = Modifier
+            .fillMaxSize()
+    ){
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(50.dp, 50.dp)
+                .align(Alignment.Center),
+            color = colorResource(R.color.button),
+            trackColor = colorResource(R.color.LightGray)
+        )
     }
 }
