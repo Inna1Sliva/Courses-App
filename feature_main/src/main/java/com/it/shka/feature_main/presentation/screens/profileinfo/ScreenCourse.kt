@@ -2,6 +2,7 @@ package com.it.shka.feature_main.presentation.screens.profileinfo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.it.shka.feature_main.R
+import com.it.shka.feature_main.presentation.model.CourseUi
 
 @Composable
 fun ScreenCourse(){
@@ -34,47 +36,40 @@ val viewModel = hiltViewModel<MainProfileViewModel>()
                 .fillMaxSize()
                 .padding(top=10.dp)
         ) {
-            courseUi.value.forEach {courseUi ->
-                stickyHeader {
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(30.dp)
-                    ){
-                        Text(
-                            text = courseUi.id.toString(),
-                            color = Color.White,
-                            fontSize = 12.sp
-                        )
-                        Text(
-                        text = courseUi.main_topic,
-                        color = Color.White,
-                        fontSize = 12.sp
-                    )
-                    }
+
+            items(courseUi.value) { course ->
+               MenuListCourse(course)
 
             }
-                items(courseUi.subtopics){subtopicUi->
-                    Row (
-                        modifier = Modifier
-                            .height(30.dp)
-                            .background(colorResource(R.color.Stroke))
-                    ){
-                        Text(
-                            text = subtopicUi.subtopic_id,
-                            color = Color.White,
-                            fontSize = 10.sp
-                        )
-                        Text(
-                        text = subtopicUi.title,
-                        color = Color.White,
-                        fontSize = 10.sp
-                         )
-                    }
 
-                }
 
-           }
         }
+    }
+}
+@Composable
+fun MenuListCourse(courseUi: CourseUi){
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = colorResource(R.color.LightGray))
+    ){
+       Row(
+           modifier = Modifier
+               .fillMaxWidth()
+               .height(30.dp)
+               .background(color = colorResource(R.color.black))
+       ) {
+           Text(
+               text = courseUi.id.toString(),
+               color = Color.White,
+               fontSize = 12.sp
+           )
+           Text(
+               text = courseUi.main_topic,
+               color = Color.White,
+               fontSize = 12.sp
+           )
+
+       }
     }
 }

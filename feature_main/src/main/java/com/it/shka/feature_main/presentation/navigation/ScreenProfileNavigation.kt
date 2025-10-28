@@ -16,7 +16,7 @@ val navController = rememberNavController()
         startDestination = RoutScreenProfile.ScreenProfile.rout
     ){
         composable(RoutScreenProfile.ScreenProfile.rout){
-            ScreenProfile()
+            ScreenProfile(navController)
         }
         composable(RoutScreenProfile.ScreenCourse.rout){
             ScreenCourse()

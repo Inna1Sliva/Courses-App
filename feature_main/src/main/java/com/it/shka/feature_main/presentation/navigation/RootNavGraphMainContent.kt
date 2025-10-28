@@ -46,7 +46,7 @@ fun RootNavGraphMainContent(){
                     ScreenFavorites()
                 }
                 composable(RouteBottomNavigation.ScreenProfile.route ) {
-                    ScreenProfile()
+                    ScreenProfileNavigation()
                 }
             }
         },

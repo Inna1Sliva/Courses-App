@@ -33,24 +33,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
+import com.it.shka.feature_main.presentation.route.RoutScreenProfile
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ItemListCourse(modifier: Modifier, course: CoursesProfileUi,){
-   // var hasLike by remember { mutableStateOf(courses.hasLike) }
+fun ItemListCourse(navController: NavController, course: CoursesProfileUi,){
+    val viewModel = hiltViewModel<MainProfileViewModel>()
     var progress by remember { mutableFloatStateOf(0.1f) }
     Column(
-        modifier
+        modifier = Modifier
             .fillMaxWidth()
+            .clickable{
+                viewModel.setCourseUi(course.cours)
+                navController.navigate(RoutScreenProfile.ScreenCourse.rout)
+            }
             .padding(bottom = 10.dp)
             .background(colorResource(R.color.Stroke), shape = RoundedCornerShape(16.dp))
     )    {
         Box(
-            modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color.Blue, shape = RoundedCornerShape(16.dp))
                 .height(114.dp)
@@ -66,21 +73,21 @@ fun ItemListCourse(modifier: Modifier, course: CoursesProfileUi,){
             )
 
             Row (
-                modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
 
             Row (
-                modifier
+                modifier = Modifier
                     .padding(5.dp)
                     .height(114.dp),
               verticalAlignment = Alignment.Bottom
                   //  .background(color = colorResource(R.color.glass), shape = RoundedCornerShape(10.dp))
             ){
                 Row(
-                    modifier
+                    modifier = Modifier
                     .wrapContentSize()
                     .background(color = colorResource(R.color.glass), shape = RoundedCornerShape(10.dp))
                 ) {
@@ -106,7 +113,7 @@ fun ItemListCourse(modifier: Modifier, course: CoursesProfileUi,){
                         .width(4.dp)
                 )
                 Row(
-                    modifier
+                    modifier = Modifier
                        //.padding(4.dp)
                         .wrapContentSize()
                         .background(color = colorResource(R.color.glass), shape = RoundedCornerShape(10.dp)),
@@ -124,11 +131,11 @@ fun ItemListCourse(modifier: Modifier, course: CoursesProfileUi,){
                 }
             }
                 Spacer(
-                    modifier
+                    modifier = Modifier
                         .width(30.dp)
                 )
                Row (
-                   modifier
+                   modifier = Modifier
                        .padding(5.dp)
                        .wrapContentSize()
                        .background(color = colorResource(R.color.glass), shape = CircleShape),
@@ -154,7 +161,7 @@ fun ItemListCourse(modifier: Modifier, course: CoursesProfileUi,){
             color = Color.White
         )
                Row(
-            modifier
+                   modifier = Modifier
                 .padding(start = 15.dp, end = 15.dp, top = 10.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

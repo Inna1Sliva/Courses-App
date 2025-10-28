@@ -18,8 +18,8 @@ import javax.inject.Inject
 class MainProfileViewModel @Inject constructor(private val repository: ProfileUserRepositoryImp): ViewModel() {
     private val _viewModelState = MutableStateFlow(ProfileInfoState())
     val viewModelState: StateFlow<ProfileInfoState> get()=_viewModelState
-    private val _courseUi = MutableStateFlow<List<CourseUi>>(emptyList())
-    val courseUi: StateFlow<List<CourseUi>> get() = _courseUi
+    private val _courseUi = MutableStateFlow(CourseInfoState())
+    val courseUi: StateFlow<CourseInfoState> get() = _courseUi
     init {
         viewModelScope.launch {
             delay(2000)
@@ -36,7 +36,8 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
     }
     fun setCourseUi(courseUi: List<CourseUi>){
         viewModelScope.launch {
-            _courseUi.value = courseUi
+            _courseUi.update {it.copy(course = courseUi)
+            }
         }
     }
 }

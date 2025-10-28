@@ -32,22 +32,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 
 @Composable
-fun ScreenProfile(){
+fun ScreenProfile(navControllerProfile : NavController){
 val viewModel = hiltViewModel<MainProfileViewModel>()
     val uiState by remember { viewModel.viewModelState }.collectAsState()
     when{
         uiState.isLoading -> LoadingProfile()
-        uiState.course != null -> ScreenProfileContent(uiState)
+        uiState.course != null -> ScreenProfileContent(uiState, navControllerProfile)
         uiState.error -> LoadingProfile()
 
     }
 }
 @Composable
-fun ScreenProfileContent(uiState: ProfileInfoState) {
+fun ScreenProfileContent(uiState: ProfileInfoState, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -177,8 +178,8 @@ fun ScreenProfileContent(uiState: ProfileInfoState) {
                     .padding( 10.dp)
             ) {
                 items(listOf(uiState.course)) {
-                    it?.forEach {
-                        ItemListCourse(modifier = Modifier, course = it)
+                    it?.forEach {coursesProfileUi ->
+                        ItemListCourse(navController, course = coursesProfileUi)
                     }
 
                 }
