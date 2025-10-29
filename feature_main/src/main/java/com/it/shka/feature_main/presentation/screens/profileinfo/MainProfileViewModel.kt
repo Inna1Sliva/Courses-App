@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_main.data.repository.ProfileUserRepositoryImp
 import com.it.shka.feature_main.presentation.mapper.toDomainCoursesProfile
+import com.it.shka.feature_main.presentation.mapper.toDomainDataCoursesProfile
 import com.it.shka.feature_main.presentation.model.CourseUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -34,18 +35,17 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
             }
         }
     }
-    fun setCourseUi(courseId: Int){
+    fun getCourseById(id: Int){
         viewModelScope.launch {
             try {
-                _courseUiState.update { it.copy(isLoading = true) }
-                val courseUi = repository.getCourseId(courseId)
-                _courseUiState.update { it.copy(courseUi, isLoading = false) }
+                _courseUiState.update {it.copy(isLoading = true) }
+                val course = repository.getCoursesProfile()
+                //course.find { it.id == id }
+                _courseUiState.update { it.copy(course = course.find { it.id == id}?.toDomainDataCoursesProfile(), isLoading = false) }
             }catch (e: Exception){
-                println(e)
-                _courseUiState.update { it.copy(error = true) }
+                _courseUiState.update { it.copy(isLoading = false, error = true) }
             }
         }
-
-
     }
+
 }

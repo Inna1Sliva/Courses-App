@@ -1,7 +1,7 @@
 package com.it.shka.feature_main.domain.model
 
 data class CoursesProfile(
-    val id: Int,
+    var id: Int,
     val category: String,
     val title: String,
     val text: String,

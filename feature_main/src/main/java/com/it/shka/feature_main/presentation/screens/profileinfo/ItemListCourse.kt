@@ -50,8 +50,7 @@ fun ItemListCourse(navController: NavController, course: CoursesProfileUi,){
         modifier = Modifier
             .fillMaxWidth()
             .clickable{
-                viewModel.setCourseUi(course.id)
-                navController.navigate(RoutScreenProfile.ScreenCourse.rout)
+                navController.navigate("${RoutScreenProfile.ScreenCourse.rout}/${course.id}")
             }
             .padding(bottom = 10.dp)
             .background(colorResource(R.color.Stroke), shape = RoundedCornerShape(16.dp))

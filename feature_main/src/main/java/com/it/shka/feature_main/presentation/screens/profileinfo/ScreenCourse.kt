@@ -1,6 +1,5 @@
 package com.it.shka.feature_main.presentation.screens.profileinfo
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,19 +31,20 @@ import com.it.shka.feature_main.presentation.model.CourseUi
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 
 @Composable
-fun ScreenCourse(viewModel: MainProfileViewModel){
-    val courseUi by remember { viewModel.viewModelState}.collectAsState()
+fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
+    LaunchedEffect(id) {id?.let { viewModel.getCourseById(it) } }
+    val courseUi by remember { viewModel.courseUiState}.collectAsState()
   when{
       courseUi.isLoading-> Loader()
       courseUi.course != null -> ScreenCourseContent(courseUi.course!!)
-      courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
+      courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)//Добавить диалог
   }
 
 
 
 }
 @Composable
-fun ScreenCourseContent(courseUi: List<CoursesProfileUi>){
+fun ScreenCourseContent(courseUi: CoursesProfileUi){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,13 +55,12 @@ fun ScreenCourseContent(courseUi: List<CoursesProfileUi>){
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
-            courseUi.forEach {coursesProfileUi ->
-                  items(coursesProfileUi.cours) { course ->
+            items(courseUi.cours) { course ->
         MenuListCourse(course)
 
              }
         }
-        }
+
     }
 }
 @Composable

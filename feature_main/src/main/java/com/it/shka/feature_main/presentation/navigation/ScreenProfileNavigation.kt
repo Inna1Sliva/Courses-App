@@ -21,8 +21,9 @@ val navController = rememberNavController()
         composable(RoutScreenProfile.ScreenProfile.rout){
             ScreenProfile(viewModel,navController)
         }
-        composable(RoutScreenProfile.ScreenCourse.rout){
-            ScreenCourse(viewModel)
+        composable("${RoutScreenProfile.ScreenCourse.rout}/{courseId}"){
+            val id = it.arguments?.getString("courseId")
+            ScreenCourse(id?.toInt(),viewModel)
         }
     }
 }
