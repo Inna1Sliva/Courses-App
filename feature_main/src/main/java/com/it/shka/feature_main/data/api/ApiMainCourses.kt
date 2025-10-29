@@ -14,5 +14,5 @@ interface ApiMainCourses {
     @GET("/cours_main")
  suspend fun getListCourse(): List<CoursesProfileDto>
  @GET("/cours_main")
- suspend fun getCourseId(@Query("id") id: Int): List<CoursesProfileDto>
+ suspend fun getCourseId(@Query("id") id: Int): CoursesProfileDto
 }

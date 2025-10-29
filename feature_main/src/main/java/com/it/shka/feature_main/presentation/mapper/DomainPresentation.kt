@@ -1,6 +1,8 @@
 package com.it.shka.feature_main.presentation.mapper
 
 
+import com.it.shka.feature_main.data.mapper.toDomainCourse
+import com.it.shka.feature_main.data.model.CoursesProfileDto
 import com.it.shka.feature_main.domain.model.Course
 import com.it.shka.feature_main.domain.model.Courses
 import com.it.shka.feature_main.domain.model.CoursesProfile
@@ -11,7 +13,38 @@ import com.it.shka.feature_main.presentation.model.CoursesModel
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 import com.it.shka.feature_main.presentation.model.SubtopicUi
 import com.it.shka.feature_main.presentation.model.TheoryUi
-
+fun CoursesProfileDto.toDomainDataCoursesProfile(): CoursesProfile{
+    return CoursesProfile(
+        id = this.id,
+        category = this.category,
+        title = this.title,
+        text = this.text,
+        price = this.price,
+        rate = this.rate,
+        startDate = this.startDate,
+        hasLike = this.hasLike,
+        image = this.image,
+        publishDate = this.publishDate,
+        destination = this.destination,
+        cours = this.cours.toDomainCourse()
+    )
+}
+fun CoursesProfile.toDomainDataCoursesProfile(): CoursesProfileUi{
+    return CoursesProfileUi(
+        id = this.id,
+        category = this.category,
+        title = this.title,
+        text = this.text,
+        price = this.price,
+        rate = this.rate,
+        startDate = this.startDate,
+        hasLike = this.hasLike,
+        image = this.image,
+        publishDate = this.publishDate,
+        destination = this.destination,
+        cours = this.cours.toDomainCourses()
+    )
+}
 fun List<CoursesProfile>.toDomainCoursesProfile(): List<CoursesProfileUi>{
     return this.map {coursesProfile ->
         CoursesProfileUi(

@@ -39,7 +39,7 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
             try {
                 _courseUiState.update { it.copy(isLoading = true) }
                 val courseUi = repository.getCourseId(courseId)
-                _courseUiState.update { it.copy(courseUi.toDomainCoursesProfile(), isLoading = false) }
+                _courseUiState.update { it.copy(courseUi, isLoading = false) }
             }catch (e: Exception){
                 println(e)
                 _courseUiState.update { it.copy(error = true) }
