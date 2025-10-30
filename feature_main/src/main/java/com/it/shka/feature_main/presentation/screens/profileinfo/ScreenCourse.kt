@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,11 +38,13 @@ import androidx.compose.ui.unit.sp
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CourseUi
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
+import com.it.shka.feature_main.presentation.model.SubtopicUi
+import com.it.shka.feature_main.presentation.model.TheoryUi
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
-    val startId = remember { MutableStateFlow(id) }
+    val startId = remember { MutableStateFlow<Int?>(id) }
     LaunchedEffect(startId) {id?.let { viewModel.getCourseById(it) } }
     val courseUi by remember { viewModel.courseUiState}.collectAsState()
   when{
@@ -55,6 +58,7 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 }
 @Composable
 fun ScreenCourseContent(courseUi: CoursesProfileUi){
+    val startId by remember { mutableStateOf(1) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -83,20 +87,67 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi){
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top=40.dp)
-                    .background(color = colorResource(R.color.black))){
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    courseUi.cours.forEach {
-
-                    }
-                    Text(text = "Error", color = Color.White, fontSize = 12.sp)
-                }
+                    .padding(top = 45.dp)
+                    .background(color = colorResource(R.color.black))
+            ){
+                MainScreenCourse(courseUi =  courseUi.cours.find { it.id == startId })
             }
         }
     )
+}
+@Composable
+fun MainScreenCourse(courseUi: CourseUi?){
+    val startId by remember { mutableStateOf(1) }
+
+    Column(
+        modifier = Modifier
+            .wrapContentSize()
+    ) {
+        Text(
+            modifier = Modifier
+                .height(50.dp)
+                .padding(start = 10.dp),
+                text = courseUi?.main_topic.toString(),
+                color = Color.White,
+                fontSize = 22.sp
+            )
+        SubtopicUiContent(courseUi?.subtopics?.find { it.id == startId}, startId)
+    }
+}
+@Composable
+fun SubtopicUiContent(subtopicUi: SubtopicUi?, id: Int){
+    val startId by remember { mutableStateOf(id) }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(color = colorResource(R.color.placholder))
+        )
+        Text(
+            modifier = Modifier
+                .height(50.dp)
+                .padding( 10.dp),
+                text = subtopicUi?.subtopic_id.toString(),
+                color = Color.White,
+                fontSize = 16.sp
+            )
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(color = colorResource(R.color.placholder))
+             )
+
+    }
+}
+@Composable
+fun TheoryUiContent(theoryUi: TheoryUi?){
+
 }
 @Composable
 fun MenuListCourse(courseUi: CourseUi){
