@@ -5,16 +5,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,10 +37,12 @@ import androidx.compose.ui.unit.sp
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CourseUi
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
-    LaunchedEffect(id) {id?.let { viewModel.getCourseById(it) } }
+    val startId = remember { MutableStateFlow(id) }
+    LaunchedEffect(startId) {id?.let { viewModel.getCourseById(it) } }
     val courseUi by remember { viewModel.courseUiState}.collectAsState()
   when{
       courseUi.isLoading-> Loader()
@@ -45,23 +55,48 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 }
 @Composable
 fun ScreenCourseContent(courseUi: CoursesProfileUi){
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top=30.dp)
-            .background(color = colorResource(R.color.black))){
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            items(courseUi.cours) { course ->
-        MenuListCourse(course)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        scrimColor = colorResource(R.color.glass),
+        gesturesEnabled = true,
+        drawerContent = {
+            ModalDrawerSheet(
+                drawerContainerColor = colorResource(R.color.Dark_gray),
+                drawerContentColor = colorResource(R.color.Dark_gray),
+                drawerTonalElevation = 6.dp
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.systemBars)
+                        .background(colorResource(R.color.Dark_gray))
+                ) {
+                    items(courseUi.cours) { course ->
+                        MenuListCourse(course)
 
-             }
+                    }
+                }
+            }
+        },
+        content = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top=40.dp)
+                    .background(color = colorResource(R.color.black))){
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    courseUi.cours.forEach {
+
+                    }
+                    Text(text = "Error", color = Color.White, fontSize = 12.sp)
+                }
+            }
         }
-
-    }
+    )
 }
 @Composable
 fun MenuListCourse(courseUi: CourseUi){

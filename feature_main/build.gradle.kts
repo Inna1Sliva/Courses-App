@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":core"))
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.compose.material3)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation (libs.retrofit2.retrofit)

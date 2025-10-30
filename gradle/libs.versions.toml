@@ -18,6 +18,7 @@ pagingCompose = "3.4.0-alpha02"
 pagingRuntimeVersion = "3.3.6"
 retrofitVersion = "2.9.0"
 roomRuntime = "2.8.2"
+material3 = "1.4.0"
 
 [libraries]
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
@@ -48,6 +49,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
