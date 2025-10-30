@@ -225,7 +225,13 @@ fun TheoryUiContent(theoryUi: TheoryUi){
 }
 @Composable
 fun TestUiContent(theoryUi: TheoryUi){
+Column(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp)
+) {
 
+}
 }
 @Composable
 fun MenuListCourse(courseUi: CourseUi){
