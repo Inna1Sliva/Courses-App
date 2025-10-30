@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,12 +30,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.it.shka.feature_main.R
 import com.it.shka.feature_main.presentation.model.CourseUi
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
@@ -56,6 +64,7 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 
 
 }
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ScreenCourseContent(courseUi: CoursesProfileUi){
     val startId by remember { mutableStateOf(1) }
@@ -66,19 +75,50 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi){
         gesturesEnabled = true,
         drawerContent = {
             ModalDrawerSheet(
+                modifier = Modifier
+                    .width(280.dp),
                 drawerContainerColor = colorResource(R.color.Dark_gray),
                 drawerContentColor = colorResource(R.color.Dark_gray),
                 drawerTonalElevation = 6.dp
             ) {
-                LazyColumn(
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .windowInsetsPadding(WindowInsets.systemBars)
-                        .background(colorResource(R.color.Dark_gray))
+                        .fillMaxWidth()
                 ) {
-                    items(courseUi.cours) { course ->
-                        MenuListCourse(course)
+                    Box {
+                        GlideImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            model = courseUi.image,
+                            contentDescription = "null",
+                            contentScale = ContentScale.FillWidth
+                        )
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .background(color = colorResource(R.color.glass))
+                                .align(Alignment.BottomCenter),
+                            text = courseUi.title,
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            lineHeight = 1.6.em
+                        )
+                    }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.systemBars)
+                            .background(colorResource(R.color.Dark_gray))
+                    ) {
+                        items(courseUi.cours) { course ->
+                            MenuListCourse(course)
 
+                        }
                     }
                 }
             }
@@ -106,7 +146,8 @@ fun MainScreenCourse(courseUi: CourseUi?){
         Text(
             modifier = Modifier
                 .height(50.dp)
-                .padding(start = 10.dp),
+                .padding(start = 10.dp, top = 10.dp)
+                .align(alignment = AbsoluteAlignment.Left),
                 text = courseUi?.main_topic.toString(),
                 color = Color.White,
                 fontSize = 22.sp
@@ -120,8 +161,8 @@ fun SubtopicUiContent(subtopicUi: SubtopicUi?, id: Int){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
-    ) {
+            .padding(start = 10.dp, end = 10.dp)
+          ) {
         Spacer(
             modifier = Modifier
                 .height(1.dp)
@@ -131,22 +172,59 @@ fun SubtopicUiContent(subtopicUi: SubtopicUi?, id: Int){
         Text(
             modifier = Modifier
                 .height(50.dp)
-                .padding( 10.dp),
-                text = subtopicUi?.subtopic_id.toString(),
+                .padding( 10.dp)
+                .align(AbsoluteAlignment.Left),
+                text = "${subtopicUi?.subtopic_id.toString()}.${subtopicUi?.title.toString()}",
                 color = Color.White,
-                fontSize = 16.sp
+                fontSize = 12.sp
             )
         Spacer(
             modifier = Modifier
                 .height(1.dp)
                 .fillMaxWidth()
                 .background(color = colorResource(R.color.placholder))
-             )
+        )
+        TheoryUi(subtopicUi?.theory?.find { it.id == startId})
 
     }
 }
 @Composable
-fun TheoryUiContent(theoryUi: TheoryUi?){
+fun TheoryUi(theoryUi: TheoryUi?){
+when(theoryUi?.topic){
+    "theory"->{TheoryUiContent(theoryUi)}
+    "tests"->{TestUiContent(theoryUi)}
+
+}
+}
+@Composable
+fun TheoryUiContent(theoryUi: TheoryUi){
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ){
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            text = theoryUi.title,
+            color = Color.White,
+            fontSize = 22.sp
+        )
+        theoryUi.description.forEach {
+            Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterHorizontally),
+                text = it,
+                color = Color.White,
+                fontSize = 12.sp
+            )
+        }
+    }
+
+}
+@Composable
+fun TestUiContent(theoryUi: TheoryUi){
 
 }
 @Composable
@@ -154,28 +232,19 @@ fun MenuListCourse(courseUi: CourseUi){
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = colorResource(R.color.LightGray))
+            .background(color = colorResource(R.color.black))
     ){
-       Row(
-           modifier = Modifier
-               .fillMaxWidth()
-               .height(30.dp)
-               .background(color = colorResource(R.color.black))
-       ) {
+
            Text(
                modifier = Modifier
-                   .padding(end = 5.dp),
-               text = courseUi.id.toString(),
+                   .fillMaxWidth()
+                   .height(30.dp)
+                   .padding(start = 10.dp),
+               text = "${courseUi.id}.${courseUi.main_topic}",
                color = Color.White,
                fontSize = 12.sp
            )
-           Text(
-               text = courseUi.main_topic,
-               color = Color.White,
-               fontSize = 12.sp
-           )
-
-       }
+    }
         Column (
             modifier = Modifier
                 .fillMaxWidth()
@@ -183,30 +252,20 @@ fun MenuListCourse(courseUi: CourseUi){
                 .background(color = colorResource(R.color.LightGray))
                   ) {
             courseUi.subtopics.forEach {subtopicUi ->
-                Row(
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Text(
-                        modifier = Modifier
-                        .padding(end = 5.dp),
-                        text = subtopicUi.subtopic_id,
+                        .fillMaxWidth()
+                        .padding(start = 20.dp),
+                        text = "${subtopicUi.subtopic_id}\t${subtopicUi.title}",
                         color = Color.White,
                         fontSize = 12.sp
-                    )
-                    Text(
-                        text = subtopicUi.title,
-                        color = Color.White,
-                        fontSize = 12.sp
-                    )
-                }
+                )
 
             }
 
         }
     }
-}
+
 @Composable
 fun Loader(){
     Box (
