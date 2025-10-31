@@ -18,10 +18,12 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -30,12 +32,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -225,11 +229,49 @@ fun TheoryUiContent(theoryUi: TheoryUi){
 }
 @Composable
 fun TestUiContent(theoryUi: TheoryUi){
+    var selectedOption by remember { mutableStateOf<Int?>(null) }
 Column(
     modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp)
 ) {
+Text(
+    text = theoryUi.title,
+    color = Color.White,
+    fontSize = 22.sp
+)
+    theoryUi.description.forEach {
+        Text(
+            text = it,
+            color = Color.White,
+            fontSize = 12.sp
+        )
+    }
+
+    theoryUi.options.forEachIndexed { index, optionText->
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .height(56.dp)
+                .selectable(
+                    selected = selectedOption ==index,
+                    onClick = {selectedOption = index},
+                    role = Role.RadioButton
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selectedOption==index,
+                onClick = null
+            )
+            Text(
+                text = optionText,
+                color = Color.White,
+                fontSize = 12.sp
+            )
+        }
+    }
 
 }
 }
