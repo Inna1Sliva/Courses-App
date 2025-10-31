@@ -1,6 +1,7 @@
 package com.it.shka.feature_main.presentation.screens.profileinfo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,7 +40,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,7 +79,7 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ScreenCourseContent(courseUi: CoursesProfileUi){
-    val startId by remember { mutableStateOf(1) }
+    var startId by remember { mutableStateOf(1) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -141,81 +142,98 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi){
                     .padding(top = 45.dp)
                     .background(color = colorResource(R.color.black))
             ){
-                MainScreenCourse(courseUi =  courseUi.cours.find { it.id == startId })
+                MainScreenCourse(courseUi =  courseUi.cours.find { it.id == startId }, onNextClick = {startId= startId+1})
             }
         }
     )
 }
 @Composable
-fun MainScreenCourse(courseUi: CourseUi?){
-    val startId by remember { mutableStateOf(1) }
+fun MainScreenCourse(courseUi: CourseUi?, onNextClick: () -> Unit){
+    val horizontalScroll = rememberScrollState()
+    var startId by remember { mutableStateOf(1) }
+    var subtopicUi by remember { mutableStateOf<SubtopicUi?>(courseUi?.subtopics?.find { it.id == startId}) }
+    LaunchedEffect(courseUi) {
+        subtopicUi = courseUi?.subtopics?.find { it.id == startId}
+    }
+    LaunchedEffect(startId) {
+        subtopicUi = courseUi?.subtopics?.find { it.id == startId}
+    }
 
     Column(
         modifier = Modifier
-            .wrapContentSize()
+            .fillMaxSize()
+            .verticalScroll(horizontalScroll)
     ) {
-        Text(
+        Row (
             modifier = Modifier
-                .height(50.dp)
-                .padding(start = 10.dp, top = 10.dp)
-                .align(alignment = AbsoluteAlignment.Left),
-                text = courseUi?.main_topic.toString(),
-                color = Color.White,
-                fontSize = 22.sp
+            .height(50.dp)
+            .padding(start = 10.dp, top = 10.dp)
+        ){
+            Text(
+                text = "${courseUi?.main_topic.toString()} /",
+                color = colorResource(R.color.Stroke),
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp
             )
-        SubtopicUiContent(courseUi?.subtopics?.find { it.id == startId}, startId)
+            Text(
+                modifier = Modifier
+                    .padding(start = 5.dp),
+                text = "${subtopicUi?.subtopic_id.toString()}.${subtopicUi?.title.toString()}",
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(color = colorResource(R.color.placholder))
+        )
+
+        SubtopicUiContent(subtopicUi,  onNextClick = {courseUi?.subtopics?.size.let { if (startId == it)onNextClick() else{ startId = startId+1}}})
     }
 }
 @Composable
-fun SubtopicUiContent(subtopicUi: SubtopicUi?, id: Int){
-    val startId by remember { mutableStateOf(id) }
+fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
+    var startId by remember { mutableStateOf(1) }
+    var theoryUi by remember { mutableStateOf<TheoryUi?>(null) }
+        LaunchedEffect(subtopicUi) {
+            theoryUi = subtopicUi?.theory?.find { it.id == startId}
+    }
+    LaunchedEffect(startId) {
+        theoryUi = subtopicUi?.theory?.find { it.id == startId}
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 10.dp, end = 10.dp)
           ) {
-        Spacer(
-            modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(color = colorResource(R.color.placholder))
-        )
-        Text(
-            modifier = Modifier
-                .height(50.dp)
-                .padding( 10.dp)
-                .align(AbsoluteAlignment.Left),
-                text = "${subtopicUi?.subtopic_id.toString()}.${subtopicUi?.title.toString()}",
-                color = Color.White,
-                fontSize = 12.sp
-            )
-        Spacer(
-            modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(color = colorResource(R.color.placholder))
-        )
-        TheoryUi(subtopicUi?.theory?.find { it.id == startId})
+
+
+        TheoryUi(theoryUi, onNextClick = { subtopicUi?.theory?.size?.let { if (startId == it) onNextClick()
+        else startId = startId+1}})
 
     }
 }
 @Composable
-fun TheoryUi(theoryUi: TheoryUi?){
+fun TheoryUi(theoryUi: TheoryUi?, onNextClick: () -> Unit){
 when(theoryUi?.topic){
-    "theory"->{TheoryUiContent(theoryUi)}
-    "tests"->{TestUiContent(theoryUi)}
+    "theory"->{TheoryUiContent(theoryUi, onNextClick = {onNextClick() })}
+    "tests"->{TestUiContent(theoryUi, onNextClick = {onNextClick()})}
 
 }
 }
 @Composable
-fun TheoryUiContent(theoryUi: TheoryUi){
+fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
     Column (
         modifier = Modifier
-            .wrapContentHeight()
+            .fillMaxSize()
             .padding(10.dp)
     ){
         Text(
             modifier = Modifier
+                .padding(bottom = 10.dp)
                 .align(Alignment.CenterHorizontally),
             text = theoryUi.title,
             color = Color.White,
@@ -231,13 +249,7 @@ fun TheoryUiContent(theoryUi: TheoryUi){
                 fontSize = 12.sp
             )
         }
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .padding(10.dp)
-                .background(color = colorResource(R.color.placholder))
-        )
+
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -254,35 +266,44 @@ fun TheoryUiContent(theoryUi: TheoryUi){
             )
             Icon(modifier = Modifier
                 .size(50.dp)
-                .padding(5.dp),
+                .padding(5.dp)
+                .clickable{
+                    onNextClick()
+                },
                 painter = painterResource(R.drawable.arrow_circle_right),
                 tint = colorResource(R.color.placholder),
-                contentDescription = "arrow circle left"
+                contentDescription = "arrow circle right"
             )
         }
     }
 
 }
 @Composable
-fun TestUiContent(theoryUi: TheoryUi){
+fun TestUiContent(theoryUi: TheoryUi, onNextClick:() -> Unit){
     var selectedOption by remember {mutableStateOf<Int?>(null)}
     var showResult by remember { mutableStateOf(false) }
     var isCorrect by remember { mutableStateOf(false) }
 Column(
     modifier = Modifier
         .fillMaxWidth()
-        .padding(10.dp)
+        .padding(top = 10.dp)
 ) {
 Text(
+    modifier = Modifier
+        .fillMaxWidth(),
     text = theoryUi.title,
     color = Color.White,
+    textAlign = TextAlign.Center,
     fontSize = 22.sp
 )
     theoryUi.description.forEach {
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = it,
+            textAlign = TextAlign.Center,
             color = Color.White,
-            fontSize = 12.sp
+            fontSize = 16.sp
         )
     }
     if (showResult){
@@ -301,8 +322,7 @@ Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
-                .height(56.dp)
-                .selectable(
+                               .selectable(
                     selected = selectedOption ==index,
                     onClick = {selectedOption = index},
                     role = Role.RadioButton
@@ -314,7 +334,11 @@ Text(
                 onClick = null
             )
             Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(start = 10.dp),
                 text = optionText,
+                maxLines = 2,
                 color = Color.White,
                 fontSize = 12.sp
             )
@@ -342,13 +366,32 @@ Text(
             fontSize = 12.sp
         )
     }
-    Spacer(
+    Row (
         modifier = Modifier
-            .height(1.dp)
-            .padding(10.dp)
             .fillMaxWidth()
-            .background(color = colorResource(R.color.placholder))
-    )
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.Bottom
+    ){
+        Icon(modifier = Modifier
+            .size(50.dp)
+            .padding(5.dp),
+            painter = painterResource(R.drawable.arrow_circle_left),
+            tint = colorResource(R.color.placholder),
+            contentDescription = "arrow circle left"
+        )
+        Icon(modifier = Modifier
+            .size(50.dp)
+            .padding(5.dp)
+            .clickable{
+                onNextClick()
+            },
+            painter = painterResource(R.drawable.arrow_circle_right),
+            tint = colorResource(R.color.placholder),
+            contentDescription = "arrow circle right"
+        )
+    }
+
 }
 }
 @Composable
