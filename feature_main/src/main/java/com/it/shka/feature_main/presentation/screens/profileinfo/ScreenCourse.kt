@@ -15,12 +15,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.RadioButton
@@ -39,6 +44,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -204,7 +211,7 @@ when(theoryUi?.topic){
 fun TheoryUiContent(theoryUi: TheoryUi){
     Column (
         modifier = Modifier
-            .fillMaxWidth()
+            .wrapContentHeight()
             .padding(10.dp)
     ){
         Text(
@@ -224,12 +231,43 @@ fun TheoryUiContent(theoryUi: TheoryUi){
                 fontSize = 12.sp
             )
         }
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .padding(10.dp)
+                .background(color = colorResource(R.color.placholder))
+        )
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Bottom
+        ){
+            Icon(modifier = Modifier
+                .size(50.dp)
+                .padding(5.dp),
+                painter = painterResource(R.drawable.arrow_circle_left),
+                tint = colorResource(R.color.placholder),
+                contentDescription = "arrow circle left"
+            )
+            Icon(modifier = Modifier
+                .size(50.dp)
+                .padding(5.dp),
+                painter = painterResource(R.drawable.arrow_circle_right),
+                tint = colorResource(R.color.placholder),
+                contentDescription = "arrow circle left"
+            )
+        }
     }
 
 }
 @Composable
 fun TestUiContent(theoryUi: TheoryUi){
-    var selectedOption by remember { mutableStateOf<Int?>(null) }
+    var selectedOption by remember {mutableStateOf<Int?>(null)}
+    var showResult by remember { mutableStateOf(false) }
+    var isCorrect by remember { mutableStateOf(false) }
 Column(
     modifier = Modifier
         .fillMaxWidth()
@@ -245,6 +283,16 @@ Text(
             text = it,
             color = Color.White,
             fontSize = 12.sp
+        )
+    }
+    if (showResult){
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            text = if (isCorrect) "Правильно!" else "Неверно. Попробуйте ещё.",
+            style = if (isCorrect) MaterialTheme.typography.bodyLarge.copy(color = Color.Green)
+            else MaterialTheme.typography.bodyLarge.copy(color = Color.Red),
         )
     }
 
@@ -272,7 +320,35 @@ Text(
             )
         }
     }
-
+    Button(
+        modifier = Modifier
+            .height(50.dp)
+            .align(Alignment.End)
+            .padding(10.dp),
+        onClick = {
+            if (selectedOption != null){
+                isCorrect = (selectedOption == theoryUi.correct_option)
+                showResult = true
+            }
+        },
+        colors = ButtonDefaults.buttonColors(
+            contentColor = colorResource(R.color.button),
+            containerColor = colorResource(R.color.button)
+        )
+    ) {
+        Text(
+            text = stringResource(R.string.button_option),
+            color = Color.White,
+            fontSize = 12.sp
+        )
+    }
+    Spacer(
+        modifier = Modifier
+            .height(1.dp)
+            .padding(10.dp)
+            .fillMaxWidth()
+            .background(color = colorResource(R.color.placholder))
+    )
 }
 }
 @Composable
