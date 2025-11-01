@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
@@ -127,8 +128,11 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi){
                             .windowInsetsPadding(WindowInsets.systemBars)
                             .background(colorResource(R.color.Dark_gray))
                     ) {
+                       // itemsIndexed(courseUi.cours){index, item->
+
+                        //}
                         items(courseUi.cours) { course ->
-                            MenuListCourse(course)
+                            MenuListCourse(course, startId, courseUi)
 
                         }
                     }
@@ -395,7 +399,20 @@ Text(
 }
 }
 @Composable
-fun MenuListCourse(courseUi: CourseUi){
+fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfileUi){
+    var startId by remember { mutableStateOf(1) }
+   //var selectedSubtopic by remember {  }
+   var isSelected  by remember { mutableStateOf(false) }
+   var courseUiId by remember { mutableStateOf(coursesProfileUi.cours.find { it.id == startId }) }
+    courseUiId?.status=true
+   // isSelected = selectedSubtopic==courseUi.
+
+
+   LaunchedEffect(startId) {
+ courseUiId = coursesProfileUi.cours.find { it.id == startId  }
+   }
+    //isSelected = selectedOption == selectedSubtopic
+
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -406,23 +423,28 @@ fun MenuListCourse(courseUi: CourseUi){
                modifier = Modifier
                    .fillMaxWidth()
                    .height(30.dp)
-                   .padding(start = 10.dp),
-               text = "${courseUi.id}.${courseUi.main_topic}",
+                   .padding(start = 10.dp)
+                   .selectable(
+                       selected = courseUi.status ,
+                       onClick = {startId = courseUi.id}
+                   )
+                   .background(if (courseUi.status == true) colorResource(R.color.glass)else colorResource(R.color.placholder)),
+                         text = "${courseUi.id}.${courseUi.main_topic}",
                color = Color.White,
                fontSize = 12.sp
            )
     }
+    courseUi.subtopics.forEach {subtopicUi ->
+//isSelected = (selectedSubtopic == subtopicUi.title)
         Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize()
-                .background(color = colorResource(R.color.LightGray))
-                  ) {
-            courseUi.subtopics.forEach {subtopicUi ->
-                Text(
+                .padding(start = 20.dp)
+        ) {
+            Text(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp),
+                        .fillMaxWidth(),
                         text = "${subtopicUi.subtopic_id}\t${subtopicUi.title}",
                         color = Color.White,
                         fontSize = 12.sp
