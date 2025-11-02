@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,19 +61,28 @@ import com.it.shka.feature_main.presentation.model.CourseUi
 import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 import com.it.shka.feature_main.presentation.model.SubtopicUi
 import com.it.shka.feature_main.presentation.model.TheoryUi
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
-    val startId = remember { MutableStateFlow<Int?>(id) }
-    val mainTopicId = remember { mutableStateOf<Int?>(1) }
-    val subtopicId = remember { mutableStateOf(1) }
-    LaunchedEffect(startId) {id?.let { viewModel.getCourseById(it, mainTopicId = it, subtopicId = it) } }
     val courseUi by remember { viewModel.courseUiState}.collectAsState()
+    val startId = remember { mutableIntStateOf(id!!) }
+    val mainTopicId = remember { mutableIntStateOf(1) }
+    val subtopicId = remember { mutableIntStateOf(1) }
+    LaunchedEffect(startId) {
+        viewModel.getCourseById(courseId = startId.intValue, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue)
+    }
+
+
   when{
       courseUi.isLoading-> Loader()
-      courseUi.course != null -> ScreenCourseContent(courseUi.courseProfile!!, courseUi.course!!)
-      courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)//Добавить диалог
+      courseUi.course != null -> ScreenCourseContent(courseProfileUi = courseUi.courseProfile!!, courseUi = courseUi.course!!, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue, onClickSubtopicUi = {
+          topicId, subId->
+          mainTopicId.intValue = topicId
+          subtopicId.intValue = subId
+          viewModel.getCourseById(startId.intValue, mainTopicId = topicId, subtopicId = subId)
+
+      })
+      courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
   }
 
 
@@ -81,8 +90,12 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 }
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ScreenCourseContent(courseUi: CoursesProfileUi, course:List<CourseUi>){
-    var startId by remember { mutableStateOf(1) }
+fun ScreenCourseContent(courseProfileUi: CoursesProfileUi, courseUi:List<CourseUi>, mainTopicId: Int,subtopicId: Int, onClickSubtopicUi:(Int,Int)->Unit){
+    var topicId by remember { mutableIntStateOf(mainTopicId) }
+    var course by remember { mutableStateOf<CourseUi?>(null) }
+    LaunchedEffect(topicId) {
+            course = courseUi.find { it.id == topicId }
+    }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -105,7 +118,7 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi, course:List<CourseUi>){
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(150.dp),
-                            model = courseUi.image,
+                            model = courseProfileUi.image,
                             contentDescription = "null",
                             contentScale = ContentScale.FillWidth
                         )
@@ -115,7 +128,7 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi, course:List<CourseUi>){
                                 .height(40.dp)
                                 .background(color = colorResource(R.color.glass))
                                 .align(Alignment.BottomCenter),
-                            text = courseUi.title,
+                            text = courseProfileUi.title,
                             color = Color.White,
                             textAlign = TextAlign.Center,
                             fontSize = 12.sp,
@@ -130,11 +143,11 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi, course:List<CourseUi>){
                             .windowInsetsPadding(WindowInsets.systemBars)
                             .background(colorResource(R.color.Dark_gray))
                     ) {
-                       // itemsIndexed(courseUi.cours){index, item->
 
-                        //}
-                        items(course) { course ->
-                            MenuListCourse(course, startId, courseUi)
+                        items(courseUi) { course ->
+                            MenuListCourse(course, onClickSubtopicUi = {mainTopic, subtopicId->
+                                onClickSubtopicUi(mainTopic,subtopicId)
+                            })
 
                         }
                     }
@@ -148,20 +161,20 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi, course:List<CourseUi>){
                     .padding(top = 45.dp)
                     .background(color = colorResource(R.color.black))
             ){
-                MainScreenCourse(courseUi =  courseUi.cours.find { it.id == startId }, onNextClick = {startId= startId+1})
+
+                MainScreenCourse(courseUi = course, subtopicId,onNextClick = {})
+
+
             }
         }
     )
 }
 @Composable
-fun MainScreenCourse(courseUi: CourseUi?, onNextClick: () -> Unit){
+fun MainScreenCourse(courseUi: CourseUi?, subtopicId: Int,onNextClick: () -> Unit){
     val horizontalScroll = rememberScrollState()
-    var startId by remember { mutableStateOf(1) }
+    var startId by remember { mutableIntStateOf(subtopicId) }
     var subtopicUi by remember { mutableStateOf<SubtopicUi?>(courseUi?.subtopics?.find { it.id == startId}) }
-    LaunchedEffect(courseUi) {
-        subtopicUi = courseUi?.subtopics?.find { it.id == startId}
-    }
-    LaunchedEffect(startId) {
+    LaunchedEffect(subtopicId) {
         subtopicUi = courseUi?.subtopics?.find { it.id == startId}
     }
 
@@ -196,13 +209,12 @@ fun MainScreenCourse(courseUi: CourseUi?, onNextClick: () -> Unit){
                 .fillMaxWidth()
                 .background(color = colorResource(R.color.placholder))
         )
-
-        SubtopicUiContent(subtopicUi,  onNextClick = {courseUi?.subtopics?.size.let { if (startId == it)onNextClick() else{ startId = startId+1}}})
+        SubtopicUiContent(subtopicUi, onNextClick = {courseUi?.subtopics?.size.let { if (startId == it)onNextClick() else{ startId = startId+1}}})
     }
 }
 @Composable
 fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
-    var startId by remember { mutableStateOf(1) }
+    var startId by remember { mutableIntStateOf(1) }
     var theoryUi by remember { mutableStateOf<TheoryUi?>(null) }
         LaunchedEffect(subtopicUi) {
             theoryUi = subtopicUi?.theory?.find { it.id == startId}
@@ -215,27 +227,24 @@ fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
             .fillMaxSize()
             .padding(start = 10.dp, end = 10.dp)
           ) {
-
-
         TheoryUi(theoryUi, onNextClick = { subtopicUi?.theory?.size?.let { if (startId == it) onNextClick()
         else startId = startId+1}})
-
     }
 }
 @Composable
 fun TheoryUi(theoryUi: TheoryUi?, onNextClick: () -> Unit){
-when(theoryUi?.topic){
-    "theory"->{TheoryUiContent(theoryUi, onNextClick = {onNextClick() })}
-    "tests"->{TestUiContent(theoryUi, onNextClick = {onNextClick()})}
+        when(theoryUi?.topic){
+             "theory"->{TheoryUiContent(theoryUi, onNextClick = {onNextClick() })}
+             "tests"->{TestUiContent(theoryUi, onNextClick = {onNextClick()})}
 
-}
+        }
 }
 @Composable
 fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(5.dp)
     ){
         Text(
             modifier = Modifier
@@ -255,7 +264,6 @@ fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
                 fontSize = 12.sp
             )
         }
-
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -282,7 +290,6 @@ fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
             )
         }
     }
-
 }
 @Composable
 fun TestUiContent(theoryUi: TheoryUi, onNextClick:() -> Unit){
@@ -401,9 +408,7 @@ Text(
 }
 }
 @Composable
-fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfileUi){
-    var startId by remember { mutableStateOf(1) }
-
+fun MenuListCourse(courseUi: CourseUi, onClickSubtopicUi:(Int, Int)-> Unit){
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -425,6 +430,9 @@ fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfil
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize()
+                .clickable{
+                    onClickSubtopicUi(courseUi.id, subtopicUi.id)
+                }
                 .background(if (subtopicUi.status_id) colorResource(R.color.placholder)else colorResource(R.color.Dark_gray)),
             ) {
             Text(
