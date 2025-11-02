@@ -4,9 +4,9 @@ package com.it.shka.feature_main.presentation.screens.profileinfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_main.data.repository.ProfileUserRepositoryImp
+import com.it.shka.feature_main.presentation.mapper.toDomainCourses
 import com.it.shka.feature_main.presentation.mapper.toDomainCoursesProfile
 import com.it.shka.feature_main.presentation.mapper.toDomainDataCoursesProfile
-import com.it.shka.feature_main.presentation.model.CourseUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,12 +35,23 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
             }
         }
     }
-    fun getCourseById(id: Int){
+    fun getCourseById(courseId: Int,mainTopicId: Int, subtopicId: Int){
         viewModelScope.launch {
             try {
                 _courseUiState.update {it.copy(isLoading = true) }
-                val course = repository.getCoursesProfile()
-                _courseUiState.update { it.copy(course = course.find { it.id == id}?.toDomainDataCoursesProfile(), isLoading = false) }
+                val courseProfile = repository.getCoursesProfile()
+                val courseId = courseProfile.find { it.id == courseId}
+                val updateCourse = courseId?.cours?.map { mainTopic ->
+                    if (mainTopic.id == mainTopicId){
+                        val updateSubtopic = mainTopic.subtopics.map { subtopic->
+                            if (subtopic.id == subtopicId){
+                                subtopic.copy(status_id = true)
+                            }else subtopic
+                        }
+                        mainTopic.copy(subtopics = updateSubtopic)
+                    }else mainTopic
+                }
+                _courseUiState.update { it.copy(courseProfile = courseId?.toDomainDataCoursesProfile(), course =updateCourse?.toDomainCourses(), isLoading = false) }
             }catch (e: Exception){
                 _courseUiState.update { it.copy(isLoading = false, error = true) }
             }

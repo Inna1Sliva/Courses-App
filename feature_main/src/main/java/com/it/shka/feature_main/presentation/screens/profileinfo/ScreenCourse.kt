@@ -66,11 +66,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
     val startId = remember { MutableStateFlow<Int?>(id) }
-    LaunchedEffect(startId) {id?.let { viewModel.getCourseById(it) } }
+    val mainTopicId = remember { mutableStateOf<Int?>(1) }
+    val subtopicId = remember { mutableStateOf(1) }
+    LaunchedEffect(startId) {id?.let { viewModel.getCourseById(it, mainTopicId = it, subtopicId = it) } }
     val courseUi by remember { viewModel.courseUiState}.collectAsState()
   when{
       courseUi.isLoading-> Loader()
-      courseUi.course != null -> ScreenCourseContent(courseUi.course!!)
+      courseUi.course != null -> ScreenCourseContent(courseUi.courseProfile!!, courseUi.course!!)
       courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)//Добавить диалог
   }
 
@@ -79,7 +81,7 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 }
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ScreenCourseContent(courseUi: CoursesProfileUi){
+fun ScreenCourseContent(courseUi: CoursesProfileUi, course:List<CourseUi>){
     var startId by remember { mutableStateOf(1) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -131,7 +133,7 @@ fun ScreenCourseContent(courseUi: CoursesProfileUi){
                        // itemsIndexed(courseUi.cours){index, item->
 
                         //}
-                        items(courseUi.cours) { course ->
+                        items(course) { course ->
                             MenuListCourse(course, startId, courseUi)
 
                         }
@@ -401,17 +403,6 @@ Text(
 @Composable
 fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfileUi){
     var startId by remember { mutableStateOf(1) }
-   //var selectedSubtopic by remember {  }
-   var isSelected  by remember { mutableStateOf(false) }
-   var courseUiId by remember { mutableStateOf(coursesProfileUi.cours.find { it.id == startId }) }
-
-   // isSelected = selectedSubtopic==courseUi.
-
-
-   LaunchedEffect(startId) {
- courseUiId = coursesProfileUi.cours.find { it.id == startId  }
-   }
-    //isSelected = selectedOption == selectedSubtopic
 
     Column (
         modifier = Modifier
@@ -424,27 +415,22 @@ fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfil
                    .fillMaxWidth()
                    .height(30.dp)
                    .padding(start = 10.dp),
-                 //  .selectable(
-                    //   selected = courseUi.status ,
-                   //    onClick = {startId = courseUi.id}
-                 //  )
-                   //.background(if (courseUi.status == true) colorResource(R.color.glass)else colorResource(R.color.placholder)),
-                         text = "${courseUi.id}.${courseUi.main_topic}",
+               text = "${courseUi.id}.${courseUi.main_topic}",
                color = Color.White,
                fontSize = 12.sp
            )
     }
     courseUi.subtopics.forEach {subtopicUi ->
-//isSelected = (selectedSubtopic == subtopicUi.title)
         Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize()
-                .padding(start = 20.dp)
-        ) {
+                .background(if (subtopicUi.status_id) colorResource(R.color.placholder)else colorResource(R.color.Dark_gray)),
+            ) {
             Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(start = 20.dp),
                         text = "${subtopicUi.subtopic_id}\t${subtopicUi.title}",
                         color = Color.White,
                         fontSize = 12.sp
