@@ -48,7 +48,6 @@ fun List<CourseDto>.toDomainCourse(): List<Course>{
         Course(
             id = courseDto.id,
             main_topic = courseDto.main_topic,
-            status = courseDto.status,
             subtopics = courseDto.subtopics.toDomainSubtopic()
         )
     }
@@ -58,6 +57,8 @@ fun List<SubtopicDto>.toDomainSubtopic(): List<Subtopic>{
         Subtopic(
             id = subtopicDto.id,
             subtopic_id = subtopicDto.subtopic_id,
+            status_id = subtopicDto.status_id,
+            status = subtopicDto.status,
             title = subtopicDto.title,
             theory = subtopicDto.theory.toDomainTheory()
         )

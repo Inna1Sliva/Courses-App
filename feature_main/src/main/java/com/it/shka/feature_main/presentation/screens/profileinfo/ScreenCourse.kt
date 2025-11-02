@@ -404,7 +404,7 @@ fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfil
    //var selectedSubtopic by remember {  }
    var isSelected  by remember { mutableStateOf(false) }
    var courseUiId by remember { mutableStateOf(coursesProfileUi.cours.find { it.id == startId }) }
-    courseUiId?.status=true
+
    // isSelected = selectedSubtopic==courseUi.
 
 
@@ -423,12 +423,12 @@ fun MenuListCourse(courseUi: CourseUi, Id: Int?, coursesProfileUi: CoursesProfil
                modifier = Modifier
                    .fillMaxWidth()
                    .height(30.dp)
-                   .padding(start = 10.dp)
-                   .selectable(
-                       selected = courseUi.status ,
-                       onClick = {startId = courseUi.id}
-                   )
-                   .background(if (courseUi.status == true) colorResource(R.color.glass)else colorResource(R.color.placholder)),
+                   .padding(start = 10.dp),
+                 //  .selectable(
+                    //   selected = courseUi.status ,
+                   //    onClick = {startId = courseUi.id}
+                 //  )
+                   //.background(if (courseUi.status == true) colorResource(R.color.glass)else colorResource(R.color.placholder)),
                          text = "${courseUi.id}.${courseUi.main_topic}",
                color = Color.White,
                fontSize = 12.sp
