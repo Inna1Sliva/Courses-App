@@ -57,5 +57,14 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
             }
         }
     }
+    fun setTheoryIdCourse(courseId:Int, theoryId: Int){
+        viewModelScope.launch {
+        _courseUiState.value.let { course->
+          //Сделать реализацию обновления coursesProfile
+        }
+
+
+        }
+    }
 
 }
