@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,13 +66,12 @@ import com.it.shka.feature_main.presentation.model.TheoryUi
 @Composable
 fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
     val courseUi by remember { viewModel.courseUiState}.collectAsState()
-    val startId = remember { mutableIntStateOf(id!!) }
-    val mainTopicId = remember { mutableIntStateOf(1) }
-    val subtopicId = remember { mutableIntStateOf(1) }
+    val startId = rememberSaveable { mutableIntStateOf(id!!) }
+    val mainTopicId = rememberSaveable { mutableIntStateOf(1) }
+    val subtopicId = rememberSaveable { mutableIntStateOf(1) }
     LaunchedEffect(startId) {
         viewModel.getCourseById(courseId = startId.intValue, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue)
     }
-
 
   when{
       courseUi.isLoading-> Loader()
@@ -80,7 +80,6 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
           mainTopicId.intValue = topicId
           subtopicId.intValue = subId
           viewModel.getCourseById(startId.intValue, mainTopicId = topicId, subtopicId = subId)
-
       })
       courseUi.error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
   }
@@ -174,7 +173,7 @@ fun MainScreenCourse(courseUi: CourseUi?, subtopicId: Int,onNextClick: () -> Uni
     val horizontalScroll = rememberScrollState()
     var startId by remember { mutableIntStateOf(subtopicId) }
     var subtopicUi by remember { mutableStateOf<SubtopicUi?>(courseUi?.subtopics?.find { it.id == startId}) }
-    LaunchedEffect(subtopicId) {
+    LaunchedEffect(courseUi) {
         subtopicUi = courseUi?.subtopics?.find { it.id == startId}
     }
 
@@ -214,7 +213,7 @@ fun MainScreenCourse(courseUi: CourseUi?, subtopicId: Int,onNextClick: () -> Uni
 }
 @Composable
 fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
-    var startId by remember { mutableIntStateOf(1) }
+    var startId by rememberSaveable { mutableIntStateOf(1) }
     var theoryUi by remember { mutableStateOf<TheoryUi?>(null) }
         LaunchedEffect(subtopicUi) {
             theoryUi = subtopicUi?.theory?.find { it.id == startId}
@@ -225,8 +224,7 @@ fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 10.dp, end = 10.dp)
-          ) {
+    ) {
         TheoryUi(theoryUi, onNextClick = { subtopicUi?.theory?.size?.let { if (startId == it) onNextClick()
         else startId = startId+1}})
     }
@@ -245,7 +243,7 @@ fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp)
-    ){
+    ) {
         Text(
             modifier = Modifier
                 .padding(bottom = 10.dp)
@@ -264,6 +262,17 @@ fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
                 fontSize = 12.sp
             )
         }
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp)
+    ) {
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(color = colorResource(R.color.placholder))
+        )
         Row (
             modifier = Modifier
                 .fillMaxWidth()
