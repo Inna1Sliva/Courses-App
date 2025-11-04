@@ -20,8 +20,9 @@ class ProfileUserRepositoryImp(private val api: ApiMainCourses): ProfileUserRepo
 
     override suspend fun setTheoryCourse(
         courseId: Int,
-        coursesProfile: CoursesProfile
+        coursesProfile: CoursesProfile?
     ) {
-       withContext(IO){api.setTheoryCourse(courseId,coursesProfile.toDataDomainCoursesProfile())}
+       withContext(IO){
+           api.setTheoryCourse(courseId,coursesProfile?.toDataDomainCoursesProfile())}
     }
 }

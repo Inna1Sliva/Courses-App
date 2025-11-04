@@ -57,11 +57,27 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
             }
         }
     }
-    fun setTheoryIdCourse(courseId:Int, theoryId: Int){
+    fun setTheoryIdCourse(courseById:Int, theoryId: Int){
         viewModelScope.launch {
-        _courseUiState.value.let { course->
-          //Сделать реализацию обновления coursesProfile
-        }
+            _courseUiState.value.courseProfile.let { course->
+            val updateCourse = course?.copy(cours = course.cours.map {courseUi->
+                  courseUi.copy(subtopics = courseUi.subtopics.map {subtopicUi->
+                      subtopicUi.copy(theory = subtopicUi.theory.map {theoryUi->
+                         if (theoryUi.id == theoryId){
+                             theoryUi.copy(status = true)
+                         } else theoryUi
+                      })
+
+                  }
+                )
+
+              })
+                repository.setTheoryCourse(courseById,
+                    updateCourse?.toDomainDataCoursesProfile()
+                )
+            }
+
+
 
 
         }

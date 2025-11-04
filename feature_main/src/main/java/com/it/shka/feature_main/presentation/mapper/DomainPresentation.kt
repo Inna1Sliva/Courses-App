@@ -29,6 +29,57 @@ fun CoursesProfileDto.toDomainDataCoursesProfile(): CoursesProfile{
         cours = this.cours.toDomainCourse()
     )
 }
+fun CoursesProfileUi.toDomainDataCoursesProfile(): CoursesProfile{
+    return CoursesProfile(
+        id = this.id,
+        category = this.category,
+        title = this.title,
+        text = this.text,
+        price = this.price,
+        rate = this.rate,
+        startDate = this.startDate,
+        hasLike = this.hasLike,
+        image = this.image,
+        publishDate = this.publishDate,
+        destination = this.destination,
+        cours = this.cours.toDomainCourses()
+    )
+}
+fun List<CourseUi>.toDomainCourses(): List<Course>{
+    return this.map { course ->
+        Course(
+            id = course.id,
+            main_topic = course.main_topic,
+            subtopics = course.subtopics.toDomainSubtopic()
+        )
+    }
+}
+fun List<SubtopicUi>.toDomainSubtopic(): List<Subtopic>{
+    return this.map {subtopicDto ->
+        Subtopic(
+            id = subtopicDto.id,
+            subtopic_id = subtopicDto.subtopic_id,
+            status_id = subtopicDto.status_id,
+            status = subtopicDto.status,
+            title = subtopicDto.title,
+            theory = subtopicDto.theory.toDomainTheory()
+        )
+    }
+}
+fun List<TheoryUi>.toDomainTheory(): List<Theory>{
+    return this.map { theoryDto ->
+        Theory(
+            id = theoryDto.id,
+            topic = theoryDto.topic,
+            title = theoryDto.title,
+            status = theoryDto.status,
+            description = theoryDto.description,
+            options = theoryDto.options,
+            correct_option = theoryDto.correct_option
+
+        )
+    }
+}
 fun CoursesProfile.toDomainDataCoursesProfile(): CoursesProfileUi{
     return CoursesProfileUi(
         id = this.id,

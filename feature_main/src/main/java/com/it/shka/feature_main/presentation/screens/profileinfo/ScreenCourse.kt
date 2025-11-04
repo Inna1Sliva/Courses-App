@@ -75,7 +75,7 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 
   when{
       courseUi.isLoading-> Loader()
-      courseUi.course != null -> ScreenCourseContent(courseProfileUi = courseUi.courseProfile!!, courseUi = courseUi.course!!, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue, onClickSubtopicUi = {
+      courseUi.course != null -> ScreenCourseContent(courseProfileUi = courseUi.courseProfile!!, courseUi = courseUi.course!!,viewModel, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue, onClickSubtopicUi = {
           topicId, subId->
           mainTopicId.intValue = topicId
           subtopicId.intValue = subId
@@ -89,7 +89,7 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
 }
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ScreenCourseContent(courseProfileUi: CoursesProfileUi, courseUi:List<CourseUi>, mainTopicId: Int,subtopicId: Int, onClickSubtopicUi:(Int,Int)->Unit){
+fun ScreenCourseContent(courseProfileUi: CoursesProfileUi, courseUi:List<CourseUi>, viewModel: MainProfileViewModel,mainTopicId: Int,subtopicId: Int, onClickSubtopicUi:(Int,Int)->Unit){
     var topicId by remember { mutableIntStateOf(mainTopicId) }
     var course by remember { mutableStateOf<CourseUi?>(null) }
     LaunchedEffect(topicId) {
@@ -161,7 +161,7 @@ fun ScreenCourseContent(courseProfileUi: CoursesProfileUi, courseUi:List<CourseU
                     .background(color = colorResource(R.color.black))
             ){
 
-                MainScreenCourse(courseUi = course, subtopicId,onNextClick = {})
+                MainScreenCourse(courseUi = course, viewModel,subtopicId,onNextClick = {})
 
 
             }
@@ -169,7 +169,7 @@ fun ScreenCourseContent(courseProfileUi: CoursesProfileUi, courseUi:List<CourseU
     )
 }
 @Composable
-fun MainScreenCourse(courseUi: CourseUi?, subtopicId: Int,onNextClick: () -> Unit){
+fun MainScreenCourse(courseUi: CourseUi?,viewModel: MainProfileViewModel, subtopicId: Int,onNextClick: () -> Unit){
     val horizontalScroll = rememberScrollState()
     var startId by remember { mutableIntStateOf(subtopicId) }
     var subtopicUi by remember { mutableStateOf<SubtopicUi?>(courseUi?.subtopics?.find { it.id == startId}) }
@@ -208,11 +208,11 @@ fun MainScreenCourse(courseUi: CourseUi?, subtopicId: Int,onNextClick: () -> Uni
                 .fillMaxWidth()
                 .background(color = colorResource(R.color.placholder))
         )
-        SubtopicUiContent(subtopicUi, onNextClick = {courseUi?.subtopics?.size.let { if (startId == it)onNextClick() else{ startId = startId+1}}})
+        SubtopicUiContent(subtopicUi,viewModel, onNextClick = {courseUi?.subtopics?.size.let { if (startId == it)onNextClick() else{ startId = startId+1}}})
     }
 }
 @Composable
-fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
+fun SubtopicUiContent(subtopicUi: SubtopicUi?, viewModel: MainProfileViewModel, onNextClick: () -> Unit){
     var startId by rememberSaveable { mutableIntStateOf(1) }
     var theoryUi by remember { mutableStateOf<TheoryUi?>(null) }
         LaunchedEffect(subtopicUi) {
@@ -225,20 +225,23 @@ fun SubtopicUiContent(subtopicUi: SubtopicUi?, onNextClick: () -> Unit){
         modifier = Modifier
             .fillMaxSize()
     ) {
-        TheoryUi(theoryUi, onNextClick = { subtopicUi?.theory?.size?.let { if (startId == it) onNextClick()
+        TheoryUi(theoryUi,viewModel, onNextClick = { subtopicUi?.theory?.size?.let { if (startId == it) onNextClick()
         else startId = startId+1}})
     }
 }
 @Composable
-fun TheoryUi(theoryUi: TheoryUi?, onNextClick: () -> Unit){
+fun TheoryUi(theoryUi: TheoryUi?, viewModel: MainProfileViewModel, onNextClick: () -> Unit){
         when(theoryUi?.topic){
-             "theory"->{TheoryUiContent(theoryUi, onNextClick = {onNextClick() })}
+             "theory"->{TheoryUiContent(theoryUi,viewModel, onNextClick = {onNextClick() })}
              "tests"->{TestUiContent(theoryUi, onNextClick = {onNextClick()})}
 
         }
 }
 @Composable
-fun TheoryUiContent(theoryUi: TheoryUi, onNextClick:()->Unit){
+fun TheoryUiContent(theoryUi: TheoryUi, viewModel: MainProfileViewModel,onNextClick:()->Unit){
+    LaunchedEffect(Unit) {
+        viewModel.setTheoryIdCourse(1, theoryUi.id)
+    }
     Column (
         modifier = Modifier
             .fillMaxSize()
