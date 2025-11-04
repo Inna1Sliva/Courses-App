@@ -72,9 +72,9 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
                 )
 
               })
-                repository.setTheoryCourse(courseById,
-                    updateCourse?.toDomainDataCoursesProfile()
-                )
+               //repository.setTheoryCourse(courseById,
+               //     updateCourse?.toDomainDataCoursesProfile()
+               // )
             }
 
 

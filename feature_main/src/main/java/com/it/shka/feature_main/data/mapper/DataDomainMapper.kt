@@ -25,53 +25,69 @@ fun PageDto.toDomainPage(): Page{
     pages = this.pages
    )
 }
-fun CoursesProfile.toDataDomainCoursesProfile(): CoursesProfileDto{
+fun CoursesProfileDto.toDomainDataCoursesProfile(): CoursesProfile{
+    return CoursesProfile(
+        id = this.id,
+        category = this.category,
+        title = this.title,
+        text = this.text,
+        price = this.price,
+        rate = this.rate,
+        startDate = this.startDate,
+        hasLike = this.hasLike,
+        image = this.image,
+        publishDate = this.publishDate,
+        destination = this.destination,
+        cours = this.cours.toDomainDataCourse()
+    )
+}
+fun CoursesProfile.toDomainDataCoursesProfileDto(): CoursesProfileDto{
     return CoursesProfileDto(
         id = this.id,
         category = this.category,
         title = this.title,
         text = this.text,
         price = this.price,
-        rate= this.rate,
+        rate = this.rate,
         startDate = this.startDate,
         hasLike = this.hasLike,
         image = this.image,
         publishDate = this.publishDate,
-        destination =this.destination,
-        cours = this.cours.toDomainCourse()
+        destination = this.destination,
+        cours = this.cours.toDomainDataCourseDto()
     )
 }
-fun List<Course>.toDomainCourse(): List<CourseDto>{
-    return this.map { courseDto ->
+fun List<Course>.toDomainDataCourseDto(): List<CourseDto>{
+    return this.map { course ->
         CourseDto(
-            id = courseDto.id,
-            main_topic = courseDto.main_topic,
-            subtopics = courseDto.subtopics.toDomainSubtopic()
+            id = course.id,
+            main_topic = course.main_topic,
+            subtopics = course.subtopics.toDomainSubtopicDto()
         )
     }
 }
-fun List<Subtopic>.toDomainSubtopic(): List<SubtopicDto>{
-    return this.map {subtopicDto ->
+fun List<Subtopic>.toDomainSubtopicDto(): List<SubtopicDto>{
+    return this.map {subtopic ->
         SubtopicDto(
-            id = subtopicDto.id,
-            subtopic_id = subtopicDto.subtopic_id,
-            status_id = subtopicDto.status_id,
-            status = subtopicDto.status,
-            title = subtopicDto.title,
-            theory = subtopicDto.theory.toDomainTheory()
+            id = subtopic.id,
+            subtopic_id = subtopic.subtopic_id,
+            status_id = subtopic.status_id,
+            status = subtopic.status,
+            title = subtopic.title,
+            theory = subtopic.theory.toDomainTheoryDto()
         )
     }
 }
-fun List<Theory>.toDomainTheory(): List<TheoryDto>{
-    return this.map { theoryDto ->
+fun List<Theory>.toDomainTheoryDto(): List<TheoryDto>{
+    return this.map { theory ->
         TheoryDto(
-            id = theoryDto.id,
-            topic = theoryDto.topic,
-            title = theoryDto.title,
-            status = theoryDto.status,
-            description = theoryDto.description,
-            options = theoryDto.options,
-            correct_option = theoryDto.correct_option
+            id = theory.id,
+            topic = theory.topic,
+            title = theory.title,
+            status = theory.status,
+            description = theory.description,
+            options = theory.options,
+            correct_option = theory.correct_option
 
         )
     }
@@ -90,11 +106,12 @@ fun List<CoursesProfileDto>.toDomainCoursesProfile(): List<CoursesProfile>{
             image = it.image,
             publishDate = it.publishDate,
             destination = it.destination,
-            cours = it.cours.toDomainCourse()
+            cours = it.cours.toDomainDataCourse()
         )
     }
 }
-fun List<CourseDto>.toDomainCourse(): List<Course>{
+
+fun List<CourseDto>.toDomainDataCourse(): List<Course>{
     return this.map { courseDto ->
         Course(
             id = courseDto.id,

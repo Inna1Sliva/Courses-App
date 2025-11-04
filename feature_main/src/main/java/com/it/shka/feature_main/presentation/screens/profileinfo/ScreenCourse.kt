@@ -239,9 +239,9 @@ fun TheoryUi(theoryUi: TheoryUi?, viewModel: MainProfileViewModel, onNextClick: 
 }
 @Composable
 fun TheoryUiContent(theoryUi: TheoryUi, viewModel: MainProfileViewModel,onNextClick:()->Unit){
-    LaunchedEffect(Unit) {
-        viewModel.setTheoryIdCourse(1, theoryUi.id)
-    }
+   // LaunchedEffect(Unit) {
+     //   viewModel.setTheoryIdCourse(1, theoryUi.id)
+    //}
     Column (
         modifier = Modifier
             .fillMaxSize()

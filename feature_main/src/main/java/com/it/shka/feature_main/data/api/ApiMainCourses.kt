@@ -17,5 +17,5 @@ interface ApiMainCourses {
     @GET("/cours_main/")
     suspend fun getCourseId(@Query("id") id: Int): CoursesProfileDto
     @PUT("/cours_main/{id}")
-    suspend fun setTheoryCourse(@Path("id") id: Int, @Body coursesProfileDto:CoursesProfileDto?)
+    suspend fun setTheoryCourse(@Path("id") id: Int, @Body coursesProfileDto:CoursesProfileDto)
 }
