@@ -239,9 +239,7 @@ fun TheoryUi(theoryUi: TheoryUi?, viewModel: MainProfileViewModel, onNextClick: 
 }
 @Composable
 fun TheoryUiContent(theoryUi: TheoryUi, viewModel: MainProfileViewModel,onNextClick:()->Unit){
-   // LaunchedEffect(Unit) {
-     //   viewModel.setTheoryIdCourse(1, theoryUi.id)
-    //}
+
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -294,7 +292,9 @@ fun TheoryUiContent(theoryUi: TheoryUi, viewModel: MainProfileViewModel,onNextCl
                 .size(50.dp)
                 .padding(5.dp)
                 .clickable{
-                    onNextClick()
+                    //onNextClick()
+                    viewModel.setTheoryIdCourse(1, theoryUi.id)
+
                 },
                 painter = painterResource(R.drawable.arrow_circle_right),
                 tint = colorResource(R.color.placholder),

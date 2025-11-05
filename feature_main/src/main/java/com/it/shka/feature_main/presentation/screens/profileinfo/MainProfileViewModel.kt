@@ -53,6 +53,7 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
                 }
                 _courseUiState.update { it.copy(courseProfile = courseId?.toDomainDataCoursesProfile(), course =updateCourse?.toDomainCourses(), isLoading = false) }
             }catch (e: Exception){
+                println(e)
                 _courseUiState.update { it.copy(isLoading = false, error = true) }
             }
         }
@@ -72,9 +73,9 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
                 )
 
               })
-               //repository.setTheoryCourse(courseById,
-               //     updateCourse?.toDomainDataCoursesProfile()
-               // )
+               repository.setTheoryCourse(courseById,
+                  updateCourse?.toDomainDataCoursesProfile()
+                )
             }
 
 

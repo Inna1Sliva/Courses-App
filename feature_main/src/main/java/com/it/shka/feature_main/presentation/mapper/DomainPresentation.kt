@@ -1,8 +1,7 @@
 package com.it.shka.feature_main.presentation.mapper
 
 
-import com.it.shka.feature_main.data.mapper.toDomainDataCourse
-import com.it.shka.feature_main.data.model.CoursesProfileDto
+
 import com.it.shka.feature_main.domain.model.Course
 import com.it.shka.feature_main.domain.model.Courses
 import com.it.shka.feature_main.domain.model.CoursesProfile
@@ -14,11 +13,62 @@ import com.it.shka.feature_main.presentation.model.CoursesProfileUi
 import com.it.shka.feature_main.presentation.model.SubtopicUi
 import com.it.shka.feature_main.presentation.model.TheoryUi
 
+fun CoursesProfileUi.toDomainDataCoursesProfile(): CoursesProfile{
+    return CoursesProfile(
+        id = this.id,
+        categori = this.categori,
+        title = this.title,
+        text = this.text,
+        price = this.price,
+        rate = this.rate,
+        startDate = this.startDate,
+        hasLike = this.hasLike,
+        image = this.image,
+        publishDate = this.publishDate,
+        destination = this.destination,
+        cours = this.cours.toDomainCoursesUi()
+    )
+}
+fun List<CourseUi>.toDomainCoursesUi(): List<Course>{
+    return this.map { courseUi ->
+        Course(
+            id = courseUi.id,
+            main_topic = courseUi.main_topic,
+            subtopics = courseUi.subtopics.toDomainSubtopicUi()
+        )
+    }
+}
+fun List<SubtopicUi>.toDomainSubtopicUi(): List<Subtopic>{
+    return this.map {subtopicUi ->
+        Subtopic(
+            id = subtopicUi.id,
+            subtopic_id = subtopicUi.subtopic_id,
+            status_id = subtopicUi.status_id,
+            status = subtopicUi.status,
+            title = subtopicUi.title,
+            theory = subtopicUi.theory.toDomainTheoryUi()
+        )
+    }
+}
+fun List<TheoryUi>.toDomainTheoryUi(): List<Theory>{
+    return this.map { theoryUi ->
+        Theory(
+            id = theoryUi.id,
+            topic = theoryUi.topic,
+            title = theoryUi.title,
+            status = theoryUi.status,
+            description = theoryUi.description,
+            options = theoryUi.options,
+            correct_option = theoryUi.correct_option
+
+        )
+    }
+}
 
 fun CoursesProfile.toDomainDataCoursesProfile(): CoursesProfileUi{
     return CoursesProfileUi(
         id = this.id,
-        category = this.category,
+        categori = this.categori,
         title = this.title,
         text = this.text,
         price = this.price,
@@ -35,7 +85,7 @@ fun List<CoursesProfile>.toDomainCoursesProfile(): List<CoursesProfileUi>{
     return this.map {coursesProfile ->
         CoursesProfileUi(
             id = coursesProfile.id,
-            category = coursesProfile.category,
+            categori = coursesProfile.categori,
             title =coursesProfile.title,
             text = coursesProfile.text,
             price =coursesProfile.price,

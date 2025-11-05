@@ -28,7 +28,7 @@ fun PageDto.toDomainPage(): Page{
 fun CoursesProfileDto.toDomainDataCoursesProfile(): CoursesProfile{
     return CoursesProfile(
         id = this.id,
-        category = this.category,
+        categori = this.categori,
         title = this.title,
         text = this.text,
         price = this.price,
@@ -44,7 +44,7 @@ fun CoursesProfileDto.toDomainDataCoursesProfile(): CoursesProfile{
 fun CoursesProfile.toDomainDataCoursesProfileDto(): CoursesProfileDto{
     return CoursesProfileDto(
         id = this.id,
-        category = this.category,
+        categori = this.categori,
         title = this.title,
         text = this.text,
         price = this.price,
@@ -96,7 +96,7 @@ fun List<CoursesProfileDto>.toDomainCoursesProfile(): List<CoursesProfile>{
     return this.map {
         CoursesProfile(
             id = it.id,
-            category = it.category,
+            categori = it.categori,
             title = it.title,
             text = it.text,
             price = it.price,
