@@ -10,8 +10,8 @@ import retrofit2.http.Query
 
 
 interface ApiMainCourses {
-    @GET("/courses_page")
-    suspend fun getCourses(@Query("_page") page: Int, @Query("_per_page") perPage: Int =10 ): PageDto
+    @GET("api/courses")
+    suspend fun getCourses(@Query("page") page: Int, @Query("limit") limit: Int =10 ): PageDto
     @GET("/cours_main")
     suspend fun getListCourse(): List<CoursesProfileDto>
     @GET("/cours_main/")

@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ModuleRetrofit {
-    private const val BASE_URL = "http://192.168.42.91:3700"
+    private const val BASE_URL = "http://localhost:3040/"
 
     @Provides
     @Singleton

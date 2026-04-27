@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.it.shka.feature_main.presentation.navigation.RootNavGraphMainContent
 import com.it.shka.feature_auth.presentation.navigation.AuthNavigation
-import com.it.shka.feature_onboarding.presentation.navigation.NavigationScreenOnboarding
 import com.it.shka.ourses_app.navigation.rout.RoutAppNavigation
 
 @Composable
@@ -16,9 +15,9 @@ fun AppNavigation(){
         navController = navAppNavigationController,
         startDestination = RoutAppNavigation.ScreenMainContent.rout
     ){
-         composable (RoutAppNavigation.ScreenStartOnboarding.rout){
-        NavigationScreenOnboarding(navAppNavigationController)
-        }
+        // composable (RoutAppNavigation.ScreenStartOnboarding.rout){
+       // NavigationScreenOnboarding(navAppNavigationController)
+       // }
         composable(RoutAppNavigation.ScreenAuthUser.rout){
             AuthNavigation(navAppNavigationController)
         }
