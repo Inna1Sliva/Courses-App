@@ -2,7 +2,7 @@ package com.it.shka.feature_main.presentation.model
 
 data class CoursesModel(
     val id: Int,
-    val categori: String,
+    val category: String,
     val title: String,
     val text: String,
     val price: String,

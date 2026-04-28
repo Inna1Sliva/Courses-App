@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-   alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.devtools.ksp")
     alias(libs.plugins.hilt)
@@ -46,9 +46,11 @@ android {
 }
 
 dependencies {
-   // implementation(project(":feature_onboarding"))
+    // implementation(project(":feature_onboarding"))
     implementation(project(":feature_auth"))
+    implementation(project(":feature_favorites"))
     implementation(project(":feature_main"))
+    implementation(project(":feature_bottom_nav"))
     implementation(project(":core"))
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
@@ -56,9 +58,9 @@ dependencies {
     implementation(libs.compose)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation (libs.retrofit2.retrofit)
+    implementation(libs.retrofit2.retrofit)
     implementation(libs.kotlinx.coroutines.core)
-    implementation (libs.converter.gson)
+    implementation(libs.converter.gson)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

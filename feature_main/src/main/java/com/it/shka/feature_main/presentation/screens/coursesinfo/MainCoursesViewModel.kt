@@ -1,5 +1,6 @@
 package com.it.shka.feature_main.presentation.screens.coursesinfo
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -20,56 +21,46 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainCoursesViewModel @Inject constructor(private val repositoryImp: MainCoursesRepositoryImp): ViewModel() {
-   // val courses: StateFlow<List<CoursesDto>> = repositoryImp.courses
-    val pageCourses : Flow<PagingData<CoursesModel>> = getPage()
-    val badgeFavorites : StateFlow<Int> =repositoryImp.getCountFavorites().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Lazily,
-        initialValue = 0
-    )
+class MainCoursesViewModel @Inject constructor(private val repositoryImp: MainCoursesRepositoryImp) :
+    ViewModel() {
+    // val courses: StateFlow<List<CoursesDto>> = repositoryImp.courses
+    val pageCourses: Flow<PagingData<CoursesModel>> = Pager(
+        config = PagingConfig(pageSize = 10, prefetchDistance = 7),
+        pagingSourceFactory = {
+            MainPagingSource(repositoryImp)
+        }
+    ).flow.cachedIn(viewModelScope)
+
     private val _coursesDetail = MutableStateFlow<List<CoursesModel>>(emptyList())
     val coursesDetail: StateFlow<List<CoursesModel>> get() = _coursesDetail
     private val _isLoading = MutableStateFlow(false)
     val stateAppBar = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
-   // val courses: StateFlow<List<Courses>> = repositoryImp.courses
+    // val courses: StateFlow<List<Courses>> = repositoryImp.courses
 
-    fun getPage(): Flow<PagingData<CoursesModel>> {
-        return Pager(
-            config = PagingConfig(pageSize = 10),
-            pagingSourceFactory = {
-                MainPagingSource(repositoryImp)
-            }
-        ).flow.cachedIn(viewModelScope)
-    }
 
-    fun setDetailCourses(courses: CoursesModel){
+    fun setDetailCourses(courses: CoursesModel) {
         viewModelScope.launch {
             val detail = mutableListOf<CoursesModel>()
             detail.add(courses)
             _coursesDetail.value = detail
         }
     }
-    fun deleteDbId(coursId: Int){
+
+    fun deleteDbId(id: Int) {
         viewModelScope.launch {
-            try {
-                repositoryImp.deleteCoursesId(coursId = coursId)
-            }catch (e: Exception){
-                println(e)
-            }
+            repositoryImp.deleteCoursesId(id = id)
+                .onFailure {
+                    Log.e("MainCoursesViewModel", "delete failed", it)
+                }
         }
     }
-    fun insertDb(courses: CoursesModel){
+
+    fun insertDb(courses: CoursesModel) {
         viewModelScope.launch {
-            try{
-                repositoryImp.setFavoritesCourses(courses.toCoursesDomain())
-            }catch (e: Exception){
-                println(e)
-            }
+            repositoryImp.setFavoritesCourses(courses.toCoursesDomain())
+                .onFailure { Log.e("MainCoursesViewModel", "seve failed", it) }
         }
-
-
     }
 
 }

@@ -2,7 +2,7 @@ package com.it.shka.feature_main.domain.model
 
 data class Courses(
     val id: Int,
-    val categori: String,
+    val category: String,
     val title: String,
     val text: String,
     val price: String,

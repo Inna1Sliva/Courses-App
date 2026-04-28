@@ -13,8 +13,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/feature_auth" />
+            <option value="$PROJECT_DIR$/feature_bottom_nav" />
+            <option value="$PROJECT_DIR$/feature_favorites" />
             <option value="$PROJECT_DIR$/feature_main" />
             <option value="$PROJECT_DIR$/feature_onboarding" />
+            <option value="$PROJECT_DIR$/feature_prifile" />
           </set>
         </option>
       </GradleProjectSettings>

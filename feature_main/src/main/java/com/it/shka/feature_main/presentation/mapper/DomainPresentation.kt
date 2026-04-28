@@ -16,7 +16,7 @@ import com.it.shka.feature_main.presentation.model.TheoryUi
 fun CoursesProfileUi.toDomainDataCoursesProfile(): CoursesProfile{
     return CoursesProfile(
         id = this.id,
-        categori = this.categori,
+        category = this.category,
         title = this.title,
         text = this.text,
         price = this.price,
@@ -68,7 +68,7 @@ fun List<TheoryUi>.toDomainTheoryUi(): List<Theory>{
 fun CoursesProfile.toDomainDataCoursesProfile(): CoursesProfileUi{
     return CoursesProfileUi(
         id = this.id,
-        categori = this.categori,
+        category = this.category,
         title = this.title,
         text = this.text,
         price = this.price,
@@ -85,7 +85,7 @@ fun List<CoursesProfile>.toDomainCoursesProfile(): List<CoursesProfileUi>{
     return this.map {coursesProfile ->
         CoursesProfileUi(
             id = coursesProfile.id,
-            categori = coursesProfile.categori,
+            category = coursesProfile.category,
             title =coursesProfile.title,
             text = coursesProfile.text,
             price =coursesProfile.price,
@@ -147,13 +147,13 @@ fun List<Courses>.toDomain(favoriteIds: Set<Int>): List<CoursesModel> {
         title = it.title,
         image = it.image,
         destination = it.destination,
-        categori = it.categori
+        category = it.category
     )  }
     }
 fun CoursesModel.toCoursesDomain(): Courses {
     return Courses(
         id = this.id,
-        categori = this.categori,
+        category = this.category,
         title = this.title,
         text = this.text,
         price = this.price,
@@ -169,7 +169,7 @@ fun CoursesModel.toCoursesDomain(): Courses {
         return this.map {courses->
             CoursesModel(
             id = courses.id,
-            categori = courses.categori,
+            category = courses.category,
             title = courses.title,
             text = courses.text,
             price = courses.price,

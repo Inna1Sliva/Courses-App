@@ -142,11 +142,11 @@ fun ItemListCourses(modifier: Modifier, courses: CoursesModel, navHostController
                    when(hasLike){
                        true->{
                            Icon(modifier = Modifier
-                               .padding(10.dp)
+                          .padding(10.dp)
                                .size(width = 24.dp, height = 24.dp)
                                .clickable{
                                    hasLike = false
-                                   mainCoursesViewModel.deleteDbId(coursId = courses.id)
+                                   mainCoursesViewModel.deleteDbId(id= courses.id)
                                },
                                tint = colorResource(R.color.button),
                                painter = painterResource(R.drawable.baseline_bookmark),

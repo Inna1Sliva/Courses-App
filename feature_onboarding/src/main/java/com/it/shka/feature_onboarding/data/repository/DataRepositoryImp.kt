@@ -1,6 +1,6 @@
 package com.it.shka.feature_onboarding.data.repository
 
-import com.it.shka.core.database.data.AppDatabase
+import com.it.shka.core.data.AppDatabase
 import com.it.shka.feature_onboarding.domain.DataRepository
 import javax.inject.Inject
 
