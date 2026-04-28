@@ -9,15 +9,15 @@ import kotlinx.coroutines.delay
 
 class MainPagingSource (private val repositoryImp: MainCoursesRepositoryImp): PagingSource<Int, CoursesModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CoursesModel> {
-        delay(7000)
+        delay(5000)
         var page = params.key ?: 1
         return try {
             var response=repositoryImp.getPageCourse(page)
-            val favoriteById = repositoryImp.getFavoritesCourses().map{ it.id }.toSet()
+           val favoriteById = repositoryImp.getFavoritesCourses().map{ it.id }.toSet()
             LoadResult.Page(
              data = response.data.toDomain(favoriteById),
-             prevKey = if (page ==1) null else page- 1,
-             nextKey = response.next
+             prevKey = if (response.hasPrevPage) page - 1 else null,
+             nextKey = if (response.hasNextPage) page +1 else null
          )
 
      }catch (e: Exception){

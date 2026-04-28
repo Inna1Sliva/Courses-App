@@ -18,7 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.it.shka.feature_onboarding.R
+
 import com.it.shka.ourses_app.ui.theme.Сourses_AppTheme
 import kotlinx.coroutines.delay
 
@@ -52,7 +52,7 @@ private fun SplashContentActivity() {
                 .align(Alignment.Center),
             painter = painterResource(R.drawable.rubik_cube),
             contentDescription = null,
-            tint = colorResource(R.color.button)
+           // tint = colorResource(R.color.button)
         )
 
     }

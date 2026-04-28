@@ -17,10 +17,12 @@ hilt-version = "2.51.1"
 pagingCompose = "3.4.0-alpha02"
 pagingRuntimeVersion = "3.3.6"
 retrofitVersion = "2.9.0"
+kotlinxSerializationJson = "1.7.3"
 roomRuntime = "2.8.2"
 material3 = "1.4.0"
 
 [libraries]
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntimeVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
@@ -52,6 +54,7 @@ retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref =
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

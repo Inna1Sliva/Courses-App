@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ModuleRetrofit {
-    private const val BASE_URL = "http://localhost:3040/"
+    private const val BASE_URL = "http://192.168.56.1:3040/"
 
     @Provides
     @Singleton
@@ -45,10 +45,10 @@ object ModuleRetrofit {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(okHttpClient)
+            //.client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

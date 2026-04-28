@@ -18,9 +18,9 @@ fun AppNavigation(){
         // composable (RoutAppNavigation.ScreenStartOnboarding.rout){
        // NavigationScreenOnboarding(navAppNavigationController)
        // }
-        composable(RoutAppNavigation.ScreenAuthUser.rout){
-            AuthNavigation(navAppNavigationController)
-        }
+       // composable(RoutAppNavigation.ScreenAuthUser.rout){
+          //  AuthNavigation(navAppNavigationController)
+       // }
         composable(RoutAppNavigation.ScreenMainContent.rout) {
             RootNavGraphMainContent()
         }
