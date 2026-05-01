@@ -9,8 +9,10 @@ import com.it.shka.feature_bottom_nav.data.DataBottomNavRepositoryImpl
 import com.it.shka.feature_bottom_nav.domain.repository.DataBottomNavRepository
 import com.it.shka.feature_favorites.data.DataFavoritesRepositoryImpl
 import com.it.shka.feature_favorites.domain.repository.DataFavoritesRepository
-import com.it.shka.feature_main.data.repository.ProfileUserRepositoryImp
 import com.it.shka.feature_main.domain.MainCoursesRepository
+import com.it.shka.feature_profile.data.ProfileUserRepositoryImp
+import com.it.shka.feature_profile.data.api.ApiProfileCourses
+import com.it.shka.feature_profile.domain.ProfileUserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,8 +44,9 @@ object RepositoryModule {
     }
     @Provides
     @Singleton
-    fun provideProfileUserRepository(apiMainCourses: ApiMainCourses): ProfileUserRepositoryImp{
+    fun provideProfileUserRepository(apiMainCourses: ApiProfileCourses): ProfileUserRepository {
         return ProfileUserRepositoryImp(apiMainCourses)
     }
+
 
 }

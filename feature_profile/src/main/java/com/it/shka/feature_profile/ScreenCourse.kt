@@ -1,0 +1,480 @@
+package com.it.shka.feature_profile
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.it.shka.feature_profile.domain.model.Courses
+import com.it.shka.feature_profile.domain.model.DataCourses
+import com.it.shka.feature_profile.domain.model.Subtopic
+import com.it.shka.feature_profile.domain.model.Theory
+import com.it.shka.feature_profile.presentation.CoursesUiState
+import com.it.shka.feature_profile.presentation.model.MainProfileViewModel
+
+@Composable
+fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
+    val courseUiState by remember { viewModel.coursesUiState}.collectAsState()
+    val startId = rememberSaveable { mutableIntStateOf(id!!) }
+    val mainTopicId = rememberSaveable { mutableIntStateOf(1) }
+    val subtopicId = rememberSaveable { mutableIntStateOf(1) }
+    LaunchedEffect(startId) {
+        viewModel.getCourseById(courseId = startId.intValue, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue)
+    }
+
+  when(courseUiState){
+      is CoursesUiState.Loading-> Loader()
+   is CoursesUiState.Courses->ScreenCourseContent(courseProfileUi =( courseUiState as CoursesUiState.Courses).dataCourses, courseUi =(courseUiState as CoursesUiState.Courses).courses ,viewModel, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue, onClickSubtopicUi = {
+           topicId, subId->
+       mainTopicId.intValue = topicId
+       subtopicId.intValue = subId
+       viewModel.getCourseById(startId.intValue, mainTopicId = topicId, subtopicId = subId)
+
+      })
+      is CoursesUiState.Error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
+  }
+
+
+
+}
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun ScreenCourseContent(courseProfileUi: DataCourses, courseUi:List<Courses>, viewModel: MainProfileViewModel, mainTopicId: Int, subtopicId: Int, onClickSubtopicUi:(Int, Int)->Unit){
+    var topicId by remember { mutableIntStateOf(mainTopicId) }
+    var course by remember { mutableStateOf<Courses?>(null) }
+    LaunchedEffect(topicId) {
+            course = courseUi.find { it.id == topicId }
+    }
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        scrimColor = colorResource(R.color.glass),
+        gesturesEnabled = true,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier
+                    .width(280.dp),
+                drawerContainerColor = colorResource(R.color.Dark_gray),
+                drawerContentColor = colorResource(R.color.Dark_gray),
+                drawerTonalElevation = 6.dp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Box {
+                        GlideImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            model = courseProfileUi.image,
+                            contentDescription = "null",
+                            contentScale = ContentScale.FillWidth
+                        )
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .background(color = colorResource(R.color.glass))
+                                .align(Alignment.BottomCenter),
+                            text = courseProfileUi.title,
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            lineHeight = 1.6.em
+                        )
+                    }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.systemBars)
+                            .background(colorResource(R.color.Dark_gray))
+                    ) {
+
+                        items(courseUi) { course ->
+                            MenuListCourse(course, onClickSubtopicUi = {mainTopic, subtopicId->
+                                onClickSubtopicUi(mainTopic,subtopicId)
+                            })
+
+                        }
+                    }
+                }
+            }
+        },
+        content = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 45.dp)
+                    .background(color = Color.Black)
+            ){
+
+                MainScreenCourse(courseUi = course, viewModel,subtopicId,onNextClick = {})
+
+
+            }
+        }
+    )
+}
+@Composable
+fun MainScreenCourse(courseUi: Courses?, viewModel: MainProfileViewModel, subtopicId: Int, onNextClick: () -> Unit){
+    val horizontalScroll = rememberScrollState()
+    var startId by remember { mutableIntStateOf(subtopicId) }
+    var subtopicUi by remember { mutableStateOf<Subtopic?>(courseUi?.subtopics?.find { it.id == startId}) }
+    LaunchedEffect(courseUi) {
+        subtopicUi = courseUi?.subtopics?.find { it.id == startId}
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(horizontalScroll)
+    ) {
+        Row (
+            modifier = Modifier
+            .height(50.dp)
+            .padding(start = 10.dp, top = 10.dp)
+        ){
+            Text(
+                text = "${courseUi?.main_topic.toString()} /",
+                color = colorResource(R.color.Stroke),
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp
+            )
+            Text(
+                modifier = Modifier
+                    .padding(start = 5.dp),
+                text = "${subtopicUi?.subtopic_id.toString()}.${subtopicUi?.title.toString()}",
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(color = colorResource(R.color.placholder))
+        )
+        SubtopicUiContent(subtopicUi,viewModel, onNextClick = {courseUi?.subtopics?.size.let { if (startId == it)onNextClick() else{ startId = startId+1}}})
+    }
+}
+@Composable
+fun SubtopicUiContent(subtopicUi: Subtopic?, viewModel: MainProfileViewModel, onNextClick: () -> Unit){
+    var startId by rememberSaveable { mutableIntStateOf(1) }
+    var theoryUi by remember { mutableStateOf<Theory?>(null) }
+        LaunchedEffect(subtopicUi) {
+            theoryUi = subtopicUi?.theory?.find { it.id == startId}
+    }
+    LaunchedEffect(startId) {
+        theoryUi = subtopicUi?.theory?.find { it.id == startId}
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        TheoryUi(theoryUi,viewModel, onNextClick = { subtopicUi?.theory?.size?.let { if (startId == it) onNextClick()
+        else startId = startId+1}})
+    }
+}
+@Composable
+fun TheoryUi(theoryUi: Theory?, viewModel: MainProfileViewModel, onNextClick: () -> Unit){
+        when(theoryUi?.topic){
+             "theory"->{TheoryUiContent(theoryUi,viewModel, onNextClick = {onNextClick() })}
+             "tests"->{TestUiContent(theoryUi, onNextClick = {onNextClick()})}
+
+        }
+}
+@Composable
+fun TheoryUiContent(theoryUi: Theory, viewModel: MainProfileViewModel, onNextClick:()->Unit){
+
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .align(Alignment.CenterHorizontally),
+            text = theoryUi.title,
+            color = Color.White,
+            fontSize = 22.sp
+        )
+        theoryUi.description.forEach {
+            Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterHorizontally),
+                text = it,
+                color = Color.White,
+                fontSize = 12.sp
+            )
+        }
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp)
+    ) {
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(color = colorResource(R.color.placholder))
+        )
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Bottom
+        ){
+            Icon(modifier = Modifier
+                .size(50.dp)
+                .padding(5.dp),
+                painter = painterResource(R.drawable.arrow_circle_left),
+                tint = colorResource(R.color.placholder),
+                contentDescription = "arrow circle left"
+            )
+            Icon(modifier = Modifier
+                .size(50.dp)
+                .padding(5.dp)
+                .clickable{
+                    onNextClick()
+                    viewModel.setTheoryIdCourse(1, theoryUi.id)
+
+                },
+                painter = painterResource(R.drawable.arrow_circle_right),
+                tint = colorResource(R.color.placholder),
+                contentDescription = "arrow circle right"
+            )
+        }
+    }
+}
+@Composable
+fun TestUiContent(theoryUi: Theory, onNextClick:() -> Unit){
+    var selectedOption by remember {mutableStateOf<Int?>(null)}
+    var showResult by remember { mutableStateOf(false) }
+    var isCorrect by remember { mutableStateOf(false) }
+Column(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 10.dp)
+) {
+Text(
+    modifier = Modifier
+        .fillMaxWidth(),
+    text = theoryUi.title,
+    color = Color.White,
+    textAlign = TextAlign.Center,
+    fontSize = 22.sp
+)
+    theoryUi.description.forEach {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(),
+            text = it,
+            textAlign = TextAlign.Center,
+            color = Color.White,
+            fontSize = 16.sp
+        )
+    }
+    if (showResult){
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            text = if (isCorrect) "Правильно!" else "Неверно. Попробуйте ещё.",
+            style = if (isCorrect) MaterialTheme.typography.bodyLarge.copy(color = Color.Green)
+            else MaterialTheme.typography.bodyLarge.copy(color = Color.Red),
+        )
+    }
+
+    theoryUi.options.forEachIndexed { index, optionText->
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                               .selectable(
+                    selected = selectedOption ==index,
+                    onClick = {selectedOption = index},
+                    role = Role.RadioButton
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selectedOption==index,
+                onClick = null
+            )
+            Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(start = 10.dp),
+                text = optionText,
+                maxLines = 2,
+                color = Color.White,
+                fontSize = 12.sp
+            )
+        }
+    }
+    Button(
+        modifier = Modifier
+            .height(50.dp)
+            .align(Alignment.End)
+            .padding(10.dp),
+        onClick = {
+            if (selectedOption != null){
+                isCorrect = (selectedOption == theoryUi.correct_option)
+                showResult = true
+            }
+        },
+        colors = ButtonDefaults.buttonColors(
+            contentColor = colorResource(R.color.button),
+            containerColor = colorResource(R.color.button)
+        )
+    ) {
+        Text(
+            text = stringResource(R.string.button_option),
+            color = Color.White,
+            fontSize = 12.sp
+        )
+    }
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.Bottom
+    ){
+        Icon(modifier = Modifier
+            .size(50.dp)
+            .padding(5.dp),
+            painter = painterResource(R.drawable.arrow_circle_left),
+            tint = colorResource(R.color.placholder),
+            contentDescription = "arrow circle left"
+        )
+        Icon(modifier = Modifier
+            .size(50.dp)
+            .padding(5.dp)
+            .clickable{
+                onNextClick()
+            },
+            painter = painterResource(R.drawable.arrow_circle_right),
+            tint = colorResource(R.color.placholder),
+            contentDescription = "arrow circle right"
+        )
+    }
+
+}
+}
+@Composable
+fun MenuListCourse(courseUi: Courses, onClickSubtopicUi:(Int, Int)-> Unit){
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color.Black)
+    ){
+
+           Text(
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .height(30.dp)
+                   .padding(start = 10.dp),
+               text = "${courseUi.id}.${courseUi.main_topic}",
+               color = Color.White,
+               fontSize = 12.sp
+           )
+    }
+    courseUi.subtopics.forEach {subtopicUi ->
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize()
+                .clickable{
+                    onClickSubtopicUi(courseUi.id, subtopicUi.id)
+                }
+                .background(if (subtopicUi.status_id) colorResource(R.color.placholder)else colorResource(R.color.Dark_gray)),
+            ) {
+            Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp),
+                        text = "${subtopicUi.subtopic_id}\t${subtopicUi.title}",
+                        color = Color.White,
+                        fontSize = 12.sp
+                )
+
+            }
+
+        }
+    }
+
+@Composable
+fun Loader(){
+    Box (
+        modifier = Modifier
+            .fillMaxSize()
+    ){
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(50.dp, 50.dp)
+                .align(Alignment.Center),
+            color = colorResource(R.color.button),
+            trackColor = colorResource(R.color.LightGray)
+        )
+    }
+}

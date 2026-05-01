@@ -21,7 +21,7 @@ import com.it.shka.core.navigation.FavoritesScreen
 import com.it.shka.core.navigation.MainScreen
 import com.it.shka.feature_bottom_nav.presentation.ui.BottomNavigation
 import com.it.shka.feature_main.presentation.navigation.ScreenMainNavigation
-import com.it.shka.feature_main.presentation.navigation.ScreenProfileNavigation
+import com.it.shka.feature_profile.presentation.ScreenProfileNavigation
 import com.it.shka.feature_favorites.presentation.ScreenFavorites
 
 @OptIn(ExperimentalMaterial3Api::class)

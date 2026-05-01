@@ -2,6 +2,7 @@ package com.it.shka.ourses_app.hilt
 
 import com.it.shka.feature_main.data.api.ApiMainCourses
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
+import com.it.shka.feature_profile.data.api.ApiProfileCourses
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,6 +63,11 @@ object ModuleRetrofit {
  fun provideApiMainCourses(retrofit: Retrofit): ApiMainCourses{
      return retrofit.create(ApiMainCourses::class.java)
  }
+    @Provides
+    @Singleton
+    fun provideApiProfileService(retrofit: Retrofit): ApiProfileCourses {
+        return retrofit.create(ApiProfileCourses::class.java)
+    }
 }
 
 

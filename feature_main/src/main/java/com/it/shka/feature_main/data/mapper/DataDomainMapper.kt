@@ -1,6 +1,5 @@
 package com.it.shka.feature_main.data.mapper
 
-import android.R.attr.category
 import com.it.shka.core.data.entity.CoursesEntity
 import com.it.shka.feature_main.data.model.CourseDto
 import com.it.shka.feature_main.data.model.CoursesDto
@@ -41,7 +40,7 @@ fun CoursesProfileDto.toDomainDataCoursesProfile(): CoursesProfile {
         image = this.image,
         publishDate = this.publishDate,
         destination = this.destination,
-        cours = this.cours.toDomainDataCourse()
+        courses = this.cours.toDomainDataCourse()
     )
 }
 
@@ -58,7 +57,7 @@ fun CoursesProfile.toDomainDataCoursesProfileDto(): CoursesProfileDto {
         image = this.image,
         publishDate = this.publishDate,
         destination = this.destination,
-        cours = this.cours.toDomainDataCourseDto()
+        cours = this.courses.toDomainDataCourseDto()
     )
 }
 
@@ -114,7 +113,7 @@ fun List<CoursesProfileDto>.toDomainCoursesProfile(): List<CoursesProfile> {
             image = it.image,
             publishDate = it.publishDate,
             destination = it.destination,
-            cours = it.cours.toDomainDataCourse()
+            courses = it.cours.toDomainDataCourse()
         )
     }
 }

@@ -1,7 +1,7 @@
-package com.it.shka.feature_main.domain.model
+package com.it.shka.feature_profile.domain.model
 
-data class CoursesProfile(
-    var id: Int,
+data class DataCourses(
+    val id: Int,
     val category: String,
     val title: String,
     val text: String,
@@ -12,5 +12,5 @@ data class CoursesProfile(
     val image: String,
     val publishDate: String,
     val destination: List<String>,
-    val courses: List<Course>
+    val courses: List<Courses>
 )
