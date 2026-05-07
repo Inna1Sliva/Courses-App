@@ -1,5 +1,7 @@
 package com.it.shka.feature_main.presentation.screens.coursesinfo
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,9 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,22 +50,27 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.it.shka.feature_main.R
+import com.it.shka.feature_main.presentation.screens.coursesinfo.model.MainCoursesViewModel
 import com.it.shka.feature_main.presentation.screens.ItemListCourses
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenMain( navHostController: NavHostController, scrollBehavior: TopAppBarScrollBehavior){
-    val mainCoursesViewModel = hiltViewModel<MainCoursesViewModel>()
-    val courses= mainCoursesViewModel.pageCourses.collectAsLazyPagingItems()
+fun ScreenMain( navHostController: NavHostController){
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(snapAnimationSpec = spring(stiffness = Spring.DampingRatioHighBouncy))
+    val vm = hiltViewModel<MainCoursesViewModel>()
+    val courses= vm.pageCourses.collectAsLazyPagingItems()
 
     Column (
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 60.dp)
                     .background(Color.Black)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
             ){
-        mainAppBar(scrollBehavior)
+        mainAppBar(scrollBehavior, vm, searchOnClick = {
+
+            vm.setSearchQuery(it) })
 
                 Row (
                     modifier = Modifier
@@ -66,7 +78,7 @@ fun ScreenMain( navHostController: NavHostController, scrollBehavior: TopAppBarS
                     horizontalArrangement = Arrangement.End
                 ){
                     Text(
-                        text = "По дате добавления",
+                        text = stringResource(R.string.text_data_option),
                         fontSize = 14.sp,
                         color = colorResource(R.color.button)
                     )
@@ -91,49 +103,51 @@ fun ScreenMain( navHostController: NavHostController, scrollBehavior: TopAppBarS
                 ) {
                     items( count = courses.itemCount, key = courses.itemKey() )
                     { index->
-                        val  cours = courses[index] ?: return@items
+                        val  listCourses = courses[index] ?: return@items
                         ItemListCourses(
                             modifier = Modifier,
-                            cours,
+                            listCourses,
                             navHostController,
-                            mainCoursesViewModel
+                            vm
                         )
 
                     }
-                    when {
-                        courses.loadState.refresh is LoadState.Loading -> {
-                            item {
-                                Column(
-                                    modifier = Modifier
-                                        .fillParentMaxSize(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    CircularProgressIndicator(color = Color.Blue)
-                                }
-                            }
+                  courses.apply {
+                      when {
+                         loadState.refresh is LoadState.Loading -> {
+                              item {
+                                  Column(
+                                      modifier = Modifier
+                                          .fillParentMaxSize(),
+                                      horizontalAlignment = Alignment.CenterHorizontally,
+                                      verticalArrangement = Arrangement.Center
+                                  ) {
+                                      CircularProgressIndicator(color = Color.Blue)
+                                  }
+                              }
 
-                        }
+                          }
 
-                        courses.loadState.append is LoadState.Loading -> {
-                            item {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(50.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier
-                                            .size(width = 28.dp, height = 28.dp),
-                                        color = Color.Blue
-                                    )
-                                }
-                            }
-                        }
+                         loadState.append is LoadState.Loading -> {
+                              item {
+                                  Column(
+                                      modifier = Modifier
+                                          .fillMaxWidth()
+                                          .height(50.dp),
+                                      horizontalAlignment = Alignment.CenterHorizontally,
+                                      verticalArrangement = Arrangement.Center
+                                  ) {
+                                      CircularProgressIndicator(
+                                          modifier = Modifier
+                                              .size(width = 28.dp, height = 28.dp),
+                                          color = Color.Blue
+                                      )
+                                  }
+                              }
+                         }
 
-                    }
+                      }
+                  }
                 }
             }
 
@@ -141,7 +155,7 @@ fun ScreenMain( navHostController: NavHostController, scrollBehavior: TopAppBarS
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
- fun mainAppBar(scrollBehavior: TopAppBarScrollBehavior) {
+ fun mainAppBar(scrollBehavior: TopAppBarScrollBehavior, vm: MainCoursesViewModel, searchOnClick:(String)-> Unit) {
     var searchCourses by remember { mutableStateOf("") }
 
     TopAppBar(
@@ -156,6 +170,11 @@ fun ScreenMain( navHostController: NavHostController, scrollBehavior: TopAppBarS
             OutlinedTextField(
                 modifier = Modifier
                     .width(300.dp),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(onSearch = {searchOnClick(searchCourses)
+                   }),
                 value = searchCourses,
                 onValueChange = {search->
                     searchCourses = search

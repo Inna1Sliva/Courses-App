@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,14 +38,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.it.shka.feature_main.presentation.screens.coursesinfo.MainCoursesViewModel
+import com.it.shka.feature_main.presentation.screens.coursesinfo.model.MainCoursesViewModel
 import com.it.shka.feature_main.R
-import com.it.shka.feature_main.presentation.model.CoursesModel
-import com.it.shka.feature_main.presentation.route.RoutScreenMain
+import com.it.shka.feature_main.domain.model.Courses
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ItemListCourses(modifier: Modifier, courses: CoursesModel, navHostController: NavHostController, mainCoursesViewModel: MainCoursesViewModel){
+fun ItemListCourses(modifier: Modifier, courses: Courses, navHostController: NavHostController, mainCoursesViewModel: MainCoursesViewModel){
     var hasLike by remember { mutableStateOf(courses.hasLike) }
 
     Column(
@@ -206,10 +206,10 @@ fun ItemListCourses(modifier: Modifier, courses: CoursesModel, navHostController
                 Text(
                     modifier= Modifier
                         .clickable{
-                            mainCoursesViewModel.setDetailCourses(courses)
-                            navHostController.navigate(RoutScreenMain.ScreenMainDetail.rout)
+                             courses.id
+                            navHostController.navigate("MainScreenDetails/${courses.id}")
                                   },
-                    text = "Подробнее",
+                    text = stringResource(R.string.More_detailed),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(R.color.button)

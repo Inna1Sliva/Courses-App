@@ -1,21 +1,17 @@
 package com.it.shka.feature_main.data.api
 
-import com.it.shka.feature_main.data.model.CoursesProfileDto
-import com.it.shka.feature_main.data.model.PageDto
-import retrofit2.http.Body
+import com.it.shka.feature_main.domain.model.Courses
+import com.it.shka.feature_main.domain.model.Page
 import retrofit2.http.GET
-import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 
 interface ApiMainCourses {
     @GET("api/courses")
-    suspend fun getCourses(@Query("page") page: Int, @Query("limit") limit: Int =10 ): PageDto
-    @GET("api/courses")
-    suspend fun getListCourse(): List<CoursesProfileDto>
-    @GET("/cours_main/")
-    suspend fun getCourseId(@Query("id") id: Int): CoursesProfileDto
-    @PUT("/cours_main/{id}")
-    suspend fun setTheoryCourse(@Path("id") id: Int, @Body coursesProfileDto:CoursesProfileDto?)
+    suspend fun getCourses(@Query("page") page: Int, @Query("limit") limit: Int =10, @Query("q") query: String? = null): Page
+    @GET("/api/courses/{id}")
+    suspend fun getCourseById(
+        @Path("id") courseId: String
+    ): Courses
 }

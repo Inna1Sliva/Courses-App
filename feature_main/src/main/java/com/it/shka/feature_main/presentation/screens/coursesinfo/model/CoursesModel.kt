@@ -1,4 +1,4 @@
-package com.it.shka.feature_main.presentation.model
+package com.it.shka.feature_main.presentation.screens.coursesinfo.model
 
 data class CoursesModel(
     val id: Int,

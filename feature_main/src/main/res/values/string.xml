@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="button_option">Ответить</string>
+    <string name="text_data_option">По дате добавления</string>
+    <string name="More_detailed">Подробнее</string>
+    <string name="start_courses">Начать курс</string>
+    <string name="go_to_the_platform">Перейти на платформу</string>
+    <string name="description_courses">О курсе</string>
+
 
 </resources>

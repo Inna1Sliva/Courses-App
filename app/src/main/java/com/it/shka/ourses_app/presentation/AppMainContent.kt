@@ -27,12 +27,10 @@ import com.it.shka.feature_favorites.presentation.ScreenFavorites
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppMainContent(){
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(snapAnimationSpec = spring(stiffness = Spring.DampingRatioHighBouncy))
     val navBottomNavigation = rememberNavController()
     Scaffold (
         modifier = Modifier
-            .consumeWindowInsets(WindowInsets.statusBars)
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .consumeWindowInsets(WindowInsets.statusBars),
         bottomBar = {
             BottomNavigation(navBottomNavigation)
         },
@@ -43,7 +41,7 @@ fun AppMainContent(){
                 Modifier.padding(innerPadding)
             ){
                 composable<MainScreen> {
-                    ScreenMainNavigation(scrollBehavior)
+                    ScreenMainNavigation()
 
                 }
                 composable<FavoritesScreen>{
