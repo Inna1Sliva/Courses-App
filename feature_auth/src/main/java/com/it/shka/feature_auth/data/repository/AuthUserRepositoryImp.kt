@@ -1,46 +1,47 @@
 package com.it.shka.feature_auth.data.repository
 
 import com.it.shka.core.data.AppDatabase
-import com.it.shka.core.data.entity.UserIdEntity
+import com.it.shka.core.data.entity.UserTokenEntity
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
 import com.it.shka.feature_auth.data.model.User
-import com.it.shka.feature_auth.data.toDataEntity
 import com.it.shka.feature_auth.domain.AuthUserRepository
-import com.it.shka.feature_auth.domain.Result
+import com.it.shka.feature_auth.domain.UserToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class AuthUserRepositoryImp @Inject constructor(private val apiAuthUsers: ApiAuthUsers, private val db: AppDatabase) :
+class AuthUserRepositoryImp @Inject constructor(private val api: ApiAuthUsers, private val db: AppDatabase) :
     AuthUserRepository{
         private var stateValidEmail: Boolean = false
 
 
     override suspend fun getEmailServer() : List<User>{
-        return apiAuthUsers.checkEmail()
+        return api.checkEmail()
     }
 
     override suspend fun setServerUser(user: User): Result {
-        apiAuthUsers.registerUser(user)
+        api.registerUser(user)
         delay(2000)
         return Result(success = true)
     }
 
-    override suspend fun setDatabaseUserId(user: UserIdEntity): Result {
+    override suspend fun setDatabaseUserId(user: UserTokenEntity): Result {
         db.userIdDao().setUserId(user)
         delay(2000)
         return Result(success = true)
     }
 
-    override fun registerUser(user: User): Flow<Pair<Result, Result>> {
-       return insertUserServer(user = user).combine(insertUserRoom(user = user.toDataEntity())) {resultServer, resultRoom->
-           resultServer to resultRoom
+    override suspend fun registerUser(user: User): Result<UserToken> {
+       return withContext(Dispatchers.IO){
+           runCatching {
+               api.registerUser(user)
+           }
        }
     }
 
-    override fun insertUserRoom(user: UserIdEntity)=flow {
+    override fun insertUserRoom(user: UserTokenEntity)=flow {
        val result = setDatabaseUserId(user)
         emit(result)
     }

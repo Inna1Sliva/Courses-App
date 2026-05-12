@@ -43,6 +43,8 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    api(libs.androidx.navigation.compose)
+    api(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -30,18 +30,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.it.shka.core.navigation.AppContent
+import com.it.shka.core.navigation.ScreenSignUp
 import com.it.shka.feature_onboarding.R
-import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun ScreenMain(navHostController: NavHostController, navOnboardingController: NavHostController){
-    val vm = hiltViewModel<MainViewModel>()
+fun ScreenOnboarding(navAppMain: NavHostController, navOnboardingController: NavHostController){
+    val vm = hiltViewModel<OnboardingViewModel>()
     val startScreen by vm.startScreen
 
         when(startScreen){
-            StartScreen.Registration->  ScreenMainContent(navHostController)
-            StartScreen.Main->  navHostController.navigate(RouteOnboarding.ScreenMainCourses.rout) {
+            StartScreen.Registration->  ScreenOnboardingContent(navAppMain)
+            StartScreen.Main->  navAppMain.navigate(AppContent) {
                 popUpTo(navOnboardingController.graph.startDestinationId){
                     inclusive = true
                 }
@@ -50,8 +51,9 @@ fun ScreenMain(navHostController: NavHostController, navOnboardingController: Na
         }
     }
 
+
 @Composable
-fun ScreenMainContent(navHostController: NavHostController){
+fun ScreenOnboardingContent(navAppMain: NavHostController){
     Column (modifier = Modifier
         .fillMaxSize()
         .background(Color.Black),
@@ -85,9 +87,9 @@ fun ScreenMainContent(navHostController: NavHostController){
             .padding(20.dp)
             .background(color = colorResource(R.color.button), shape = RoundedCornerShape(100.dp)),
             onClick = {
-                navHostController.navigate(RouteOnboarding.ScreenAuthUser.rout){
+                navAppMain.navigate(ScreenSignUp){
                     launchSingleTop = true
-                    popUpTo(navHostController.graph.startDestinationId){
+                    popUpTo(navAppMain.graph.startDestinationId){
                         inclusive = true
                     }
                 }

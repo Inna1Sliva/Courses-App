@@ -5,19 +5,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.it.shka.feature_onboarding.presentation.route.RouteOnboarding
-import com.it.shka.feature_onboarding.presentation.screens.ScreenMain
+import com.it.shka.core.navigation.OnboardingScreen
+import com.it.shka.feature_onboarding.presentation.screens.ScreenOnboarding
 
 @Composable
 fun NavigationScreenOnboarding(navAppMain: NavHostController){
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = RouteOnboarding.ScreenMain.rout
+        startDestination = OnboardingScreen
     ){
-
-        composable(RouteOnboarding.ScreenMain.rout) {
-            ScreenMain(navAppMain, navController )
+        composable<OnboardingScreen> {
+            ScreenOnboarding(navAppMain, navController )
         }
     }
 }

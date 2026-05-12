@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(val repositoryImp: DataRepositoryImp) : ViewModel(){
+class OnboardingViewModel @Inject constructor(val repositoryImp: DataRepositoryImp) : ViewModel(){
    private val _startScreen = mutableStateOf<StartScreen?>(null)
     val startScreen: State<StartScreen?> = _startScreen
     init {

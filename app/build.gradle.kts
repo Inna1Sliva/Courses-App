@@ -46,7 +46,7 @@ android {
 }
 
 dependencies {
-    // implementation(project(":feature_onboarding"))
+    implementation(project(":feature_onboarding"))
     implementation(project(":feature_auth"))
     implementation(project(":feature_favorites"))
     implementation(project(":feature_profile"))

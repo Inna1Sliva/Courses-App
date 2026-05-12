@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    api(libs.androidx.navigation.compose)
+    api(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

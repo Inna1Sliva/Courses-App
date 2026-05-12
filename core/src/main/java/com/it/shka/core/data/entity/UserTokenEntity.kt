@@ -4,10 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "userId")
-data class UserIdEntity(
+data class UserTokenEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
-    val authId: String?,
-    val email: String?,
-    val password: String?
+    val token: String?
+
 )

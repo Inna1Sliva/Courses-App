@@ -1,10 +1,10 @@
 package com.it.shka.feature_onboarding.data.mapper
 
-import com.it.shka.core.data.entity.UserIdEntity
-import com.it.shka.feature_onboarding.domain.model.UserId
+import com.it.shka.core.data.entity.UserTokenEntity
+import com.it.shka.feature_onboarding.domain.model.UserToken
 
-fun UserIdEntity.toDomainUserId():UserId{
-   return UserId(
-       authId = this.authId
+fun UserTokenEntity.toDomainUserId():UserToken{
+   return UserToken(
+      token = this.authId
   )
 }

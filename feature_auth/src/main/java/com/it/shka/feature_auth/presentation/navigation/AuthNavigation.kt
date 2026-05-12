@@ -4,21 +4,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.it.shka.core.navigation.ScreenSignIn
+import com.it.shka.core.navigation.ScreenSignUp
 import com.it.shka.feature_auth.presentation.screens.ScreenSignIn
 import com.it.shka.feature_auth.presentation.screens.signUp.ScreenSignUp
-import com.it.shka.feature_auth.presentation.navigation.rout.RouteAuthScreens
 
 @Composable
 fun AuthNavigation(appNavigation: NavHostController){
-    val  NavHostController = rememberNavController()
+    val  authNavController = rememberNavController()
     NavHost(
-        navController = NavHostController,
-        startDestination = RouteAuthScreens.ScreenSignUp.rout
+        navController = authNavController,
+        startDestination = ScreenSignUp
     ){
-        composable(RouteAuthScreens.ScreenSignUp.rout) {
-            ScreenSignUp(NavHostController, appNavigation)
+        composable<ScreenSignUp>{
+            ScreenSignUp(authNavController, appNavigation)
         }
-        composable(RouteAuthScreens.ScreenSignIn.rout) {
+        composable<ScreenSignIn> {
             ScreenSignIn()
         }
     }
