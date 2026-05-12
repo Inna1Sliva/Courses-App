@@ -20,13 +20,17 @@ class MainRemoteDataSourceRepositoryImp @Inject constructor(
     private val api: ApiMainCourses,
     private val local: MainLocalDataSourceRepository
 ) : MainRemoteDataSourceRepository {
-    override fun pagingCourses(query: String?): Flow<PagingData<Courses>> {
-       return Pager(
-            config = PagingConfig(pageSize = 10, prefetchDistance = 7),
-            pagingSourceFactory = {
-                DataPagingSource(api, local, query)
-            }
-        ).flow
+    override suspend fun pagingCourses(query: String?): Result<Flow<PagingData<Courses>>> {
+       return withContext(Dispatchers.IO){
+           runCatching{
+               Pager(
+                   config = PagingConfig(pageSize = 10, prefetchDistance = 7),
+                   pagingSourceFactory = {
+                       DataPagingSource(api, local, query)
+                   }
+               ).flow
+           }
+       }
     }
 
     override suspend fun getCourseById(courseId: String): Result<Courses> {

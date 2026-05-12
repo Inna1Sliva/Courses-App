@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface MainRemoteDataSourceRepository {
-    fun pagingCourses(query: String?): Flow<PagingData<Courses>>
+     suspend fun pagingCourses(query: String?): Result<Flow<PagingData<Courses>>>
     suspend fun getCourseById(courseId: String): Result<Courses>
 
 }

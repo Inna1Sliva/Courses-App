@@ -24,8 +24,8 @@ class MainCoursesViewModel @Inject constructor(
     val searchQuery: StateFlow<String?> = _searchQuery
     val _pageCourses = MutableStateFlow<PagingData<Courses>>(PagingData.Companion.empty())
   val pageCourses: StateFlow<PagingData<Courses>> = _pageCourses
-    private val _coursesDetail = MutableStateFlow<List<Courses>>(emptyList())
-    val coursesDetail: StateFlow<List<Courses>> = _coursesDetail
+    private val _coursesUiState = MutableStateFlow<MainUIState>(MainUIState.Loading)
+    val coursesUiState: StateFlow<MainUIState> = _coursesUiState
 
     init {
         loadCourses()
@@ -52,14 +52,18 @@ class MainCoursesViewModel @Inject constructor(
     }
     private fun loadCourses() {
        viewModelScope.launch {
-           remote.pagingCourses(_searchQuery.value)
-               .cachedIn(viewModelScope)
-               .collectLatest { pagingData ->
-                   _pageCourses.value = pagingData
-
+           _coursesUiState.value = MainUIState.Loading
+           remote.pagingCourses(searchQuery.value)
+               .onSuccess {
+                   _coursesUiState.value = MainUIState.Success
+                 it.collectLatest { pagingData ->
+                     _pageCourses.value = pagingData
+                 } }
+               .onFailure {
+                   Log.e("MainCoursesViewModel", "paging failed", it)
                }
 
+           }
        }
-    }
 
-}
+    }
