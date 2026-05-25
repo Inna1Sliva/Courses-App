@@ -74,17 +74,17 @@ fun ScreenCourse(id: Int?, viewModel: MainProfileViewModel){
         viewModel.getCourseById(courseId = startId.intValue, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue)
     }
 
-  when(courseUiState){
-      is CoursesUiState.Loading-> Loader()
-   is CoursesUiState.Courses->ScreenCourseContent(courseProfileUi =( courseUiState as CoursesUiState.Courses).dataCourses, courseUi =(courseUiState as CoursesUiState.Courses).courses ,viewModel, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue, onClickSubtopicUi = {
-           topicId, subId->
-       mainTopicId.intValue = topicId
-       subtopicId.intValue = subId
-       viewModel.getCourseById(startId.intValue, mainTopicId = topicId, subtopicId = subId)
+ // when(courseUiState){
+    //  is CoursesUiState.Loading-> Loader()
+  // is CoursesUiState.Courses->ScreenCourseContent(courseProfileUi =( courseUiState as CoursesUiState.Courses).dataCourses, courseUi =(courseUiState as CoursesUiState.Courses).courses ,viewModel, mainTopicId = mainTopicId.intValue, subtopicId = subtopicId.intValue, onClickSubtopicUi = {
+         //  topicId, subId->
+///mainTopicId.intValue = topicId
+    ///   subtopicId.intValue = subId
+    //   viewModel.getCourseById(startId.intValue, mainTopicId = topicId, subtopicId = subId)
 
-      })
-      is CoursesUiState.Error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
-  }
+    //  })
+    //  is CoursesUiState.Error-> Text(text = "Error", color = Color.White, fontSize = 12.sp)
+ // }
 
 
 

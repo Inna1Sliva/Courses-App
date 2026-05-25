@@ -16,7 +16,7 @@ class OnboardingViewModel @Inject constructor(val repositoryImp: DataRepositoryI
     init {
         viewModelScope.launch {
             try {
-                val data = repositoryImp.getUserId()
+                val data = repositoryImp.getTokenCount()
                _startScreen.value = if (data == 0){
                    StartScreen.Registration
                }else{

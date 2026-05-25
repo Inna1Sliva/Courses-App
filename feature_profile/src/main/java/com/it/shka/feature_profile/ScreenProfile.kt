@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -32,21 +33,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.it.shka.feature_profile.domain.model.UserResponse
+import com.it.shka.feature_profile.presentation.CoursesUiState
 import com.it.shka.feature_profile.presentation.model.MainProfileViewModel
 
 @Composable
-fun ScreenProfile(viewModel: MainProfileViewModel, navControllerProfile : NavController){
-    val uiState by remember { viewModel.viewModelState }.collectAsState()
+fun ScreenProfile(viewModel: MainProfileViewModel, navControllerProfile: NavController) {
+    val uiState by remember { viewModel.coursesUiState }.collectAsState()
+   // val token by remember { viewModel.tokenUser }.collectAsState()
 
-    when{
-        uiState.isLoading -> LoadingProfile()
-        uiState.course != null -> ScreenProfileContent(uiState, navControllerProfile)
-        uiState.error -> LoadingProfile()
+    when (uiState){
+       is CoursesUiState.Loading -> LoadingProfile()
+        is CoursesUiState.Courses  -> ScreenProfileContent(uiState =(uiState as CoursesUiState.Courses).user, navControllerProfile)
+        is CoursesUiState.Error -> LoadingProfile()
 
     }
+
 }
+
 @Composable
-fun ScreenProfileContent(uiState: ProfileInfoState, navController: NavController) {
+fun ScreenProfileContent(uiState: UserResponse, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -74,6 +80,57 @@ fun ScreenProfileContent(uiState: ProfileInfoState, navController: NavController
                         shape = RoundedCornerShape(16.dp)
                     )
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.chat_notification),
+                        fontSize = 14.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.W500
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(width = 15.dp, height = 15.dp)
+                            .align(Alignment.CenterVertically)
+                            .background(
+                                color = Color.Red,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center),
+                            text = uiState.notification.push.count { !it.status }.toString(),
+                            fontSize = 12.sp,
+                            color = Color.White,
+
+                            )
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .width(50.dp)
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .size(width = 24.dp, height = 24.dp),
+                        painter = painterResource(R.drawable.arrow_forward),
+                        contentDescription = "arrow forward",
+                        tint = Color.White
+                    )
+                }
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp)
+                        .height(1.dp)
+                        .background(color = colorResource(R.color.Stroke))
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -162,43 +219,61 @@ fun ScreenProfileContent(uiState: ProfileInfoState, navController: NavController
                 }
 
             }
-            Text(
-                modifier = Modifier
-                    .padding(start = 10.dp, top = 20.dp, end = 10.dp),
-                text = stringResource(R.string.Your_courses),
-                fontSize = 22.sp,
-                color = Color.White,
-                fontWeight = FontWeight.W400
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding( 10.dp)
-            ) {
-                items(listOf(uiState.course)) {
-                    it?.forEach {coursesProfileUi ->
-                        ItemListCourse(navController, course = coursesProfileUi)
-                    }
+            when{
+                uiState.courses.isEmpty() -> {
+                  Text(
+                      modifier = Modifier
+                          .padding(start = 10.dp, top = 20.dp, end = 10.dp),
+                      text = stringResource(R.string.title_empty),
+                      fontSize = 22.sp,
+                      color = colorResource(R.color.placholder),
+                      fontWeight = FontWeight.W400
+                  )
+              }
+                else -> {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 20.dp, end = 10.dp),
+                        text = stringResource(R.string.Your_courses),
+                        fontSize = 22.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.W400
+                    )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    ) {
+                        items(listOf(uiState.courses)) {
+                            it.forEach { coursesProfileUi ->
+                                ItemListCourse(navController, course = coursesProfileUi)
+                            }
 
+                        }
+                    }
                 }
+
+
             }
+
 
         }
     }
 }
-    @Composable
-    fun LoadingProfile() {
-        Box(
+
+@Composable
+fun LoadingProfile() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Black)
+    ) {
+        CircularProgressIndicator(
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.Black)
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(50.dp, 50.dp)
-                    .align(Alignment.Center),
-                color = colorResource(R.color.button),
-                trackColor = colorResource(R.color.Stroke)
-            )
-        }
+                .size(50.dp, 50.dp)
+                .align(Alignment.Center),
+            color = colorResource(R.color.button),
+            trackColor = colorResource(R.color.Stroke)
+        )
     }
+}

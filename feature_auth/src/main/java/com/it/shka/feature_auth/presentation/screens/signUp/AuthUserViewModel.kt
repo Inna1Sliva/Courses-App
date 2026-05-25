@@ -1,94 +1,86 @@
 package com.it.shka.feature_auth.presentation.screens.signUp
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.it.shka.feature_auth.R
-import com.it.shka.feature_auth.data.model.User
-import com.it.shka.feature_auth.data.repository.AuthUserRepositoryImp
-import com.it.shka.feature_auth.presentation.model.AuthStateResult
+import com.it.shka.feature_auth.domain.model.RegisterRequest
+import com.it.shka.feature_auth.domain.RealEmailValidationUseCase
+import com.it.shka.feature_auth.domain.model.RegisterResponse
+import com.it.shka.feature_auth.domain.repository.AuthLocalDataSourceRepository
+import com.it.shka.feature_auth.domain.repository.AuthRemoteDataSourceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthUserViewModel @Inject constructor (private val repository: AuthUserRepositoryImp) : ViewModel(){
-    private val _authMessage = MutableStateFlow(AuthStateResult())
-    val authMessage: StateFlow<AuthStateResult> get() = _authMessage
-    private val _startScreen = mutableStateOf<StartScreen?>(null)
-    val startScreen: State<StartScreen?> = _startScreen
-    private val _userAll = mutableListOf<User>()
-    val userAll: List<User> get() = _userAll
-    private var state: Boolean = false
-    private val userId = UUID.randomUUID().toString()
+class AuthUserViewModel @Inject constructor(
+    private val remote: AuthRemoteDataSourceRepository,
+    private val local: AuthLocalDataSourceRepository,
+    private val useCase: RealEmailValidationUseCase
+) :
+    ViewModel() {
+    private val _authMessage = MutableStateFlow("")
+    val authMessage: StateFlow<String> get() = _authMessage
+    private val _signUpUIState = MutableStateFlow<SignUpUIState>(SignUpUIState.Empty)
+    val signUpUIState: StateFlow<SignUpUIState> get() = _signUpUIState
 
-    init {
-     getAllUser()
-    }
 
-    fun registerUser(email: String, password: String, repeatPassword: String, context: Context){
+    fun register(email: String, password: String, repeatPassword: String) {
         viewModelScope.launch {
-            _authMessage.value.message = ""
-            when{
-            email.isEmpty() || password.isEmpty() || repeatPassword.isEmpty() ->{
-                _authMessage.update { it.copy( message = context.getString( R.string.errorMessageEmpty)) }
-            }
-            repository.validateEmail(email = email)->{
-                _authMessage.update { it.copy( message = context.getString(R.string.errorMessageValidateEmail)) }
-            }
-            repository.validatePassword(password = password, repeatPassword = repeatPassword)->{
-                _authMessage.update {it.copy( message = context.getString(R.string.errorMessageValidatePassword))}
-            }
-            isEmailExist(email = email)->{
-               _authMessage.update {it.copy( message = context.getString(R.string.errorMessageEmailExist))}
-            }
-            setNewUser(email=email,password=password)->{
-                _authMessage.update {it.copy( message = context.getString(R.string.errorMessageAuth)) }
-            }
-        }
+            _authMessage.value = " "
+            when {
+                email.isEmpty() || password.isEmpty() -> {
+                    _authMessage.value = "Пожалуйста, заполните все поля"
+                }
 
-      }
-    }
-    private fun isEmailExist(email: String): Boolean{
-        return userAll.any { it.email.equals(email,ignoreCase = true) }
-    }
+                useCase.invoke(email) -> {
+                    _authMessage.value = "Некорректный формат почты"
 
-    @SuppressLint("SuspiciousIndentation")
-    private  fun setNewUser(email: String, password: String): Boolean{
-        try {
-            viewModelScope.launch {
-                val user = User(id = userId, email = email, password = password)
-                repository.registerUser(user)
-                    .collect { (resultServer, resultRoom) ->
-                      resultServer.success to resultRoom.success
-                        state = resultServer.success
-                        _startScreen.value= StartScreen.Main
-                    }
+                }
+
+                comparePassword(password, repeatPassword) -> {
+                    _authMessage.value = "Пароли не совпадают"
+                }
+
+                emailVerificationUser(email) -> {
+                    _authMessage.value = "Пользователь с такой почтой уже существует"
+
+                }
+
+                registerUser(email, password) -> {}
             }
 
-        }catch (e: Exception){
-            e.printStackTrace()
-            state= false
-        }
-        return state
 
-    }
-    private fun getAllUser(){
-        viewModelScope.launch {
-            try {
-                val emailServer = repository.getEmailServer()
-             _userAll.addAll(emailServer)
-            }catch (e: Exception){
-                e.printStackTrace()
-
-            }
         }
     }
+
+    private suspend fun registerUser(email: String, password: String): Boolean {
+        _signUpUIState.value = SignUpUIState.Loading
+        val user =
+            RegisterRequest(email = email, password = password)
+        val register = remote.registerUser(user)
+            .onSuccess { success ->
+                val userToken = RegisterResponse(token = success.token)
+                local.insertUserRoom(userToken)
+                _signUpUIState.value = SignUpUIState.Success
+            }.onFailure {
+                _signUpUIState.value = SignUpUIState.Error
+            }
+        return register.isSuccess
+    }
+
+    private suspend fun emailVerificationUser(email: String): Boolean {
+        val response = remote.getUsersEmail().find { it.email == email }
+        return response?.email == email
+
+    }
+
+    private fun comparePassword(password: String, repeatPassword: String): Boolean {
+        return password != repeatPassword
+    }
+
+
 }

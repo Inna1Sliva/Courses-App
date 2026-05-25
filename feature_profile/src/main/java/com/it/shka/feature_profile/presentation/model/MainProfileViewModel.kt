@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.it.shka.feature_profile.ProfileInfoState
+import com.it.shka.feature_profile.domain.ProfileLocalDataSourceRepository
 import com.it.shka.feature_profile.domain.ProfileUserRepository
 import com.it.shka.feature_profile.presentation.CoursesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,26 +15,54 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainProfileViewModel @Inject constructor(private val repository: ProfileUserRepository): ViewModel() {
+class MainProfileViewModel @Inject constructor(
+    private val repository: ProfileUserRepository,
+    private val local: ProfileLocalDataSourceRepository
+) : ViewModel() {
     private val _viewModelState = MutableStateFlow(ProfileInfoState())
-    val viewModelState: StateFlow<ProfileInfoState> get()=_viewModelState
+    val viewModelState: StateFlow<ProfileInfoState> get() = _viewModelState
     private val _coursesUiState = MutableStateFlow<CoursesUiState>(CoursesUiState.Loading)
     val coursesUiState: StateFlow<CoursesUiState> get() = _coursesUiState
-    init {
-        viewModelScope.launch {
-            _viewModelState.update { it.copy( isLoading = true) }
-            repository.getCoursesProfile()
-                .onSuccess { courses ->
-                    _viewModelState.update { it.copy(courses, isLoading = false) }
-                }
-                .onFailure {
-                    _viewModelState.update {it.copy(error = true)}
-                    Log.e("MainProfileViewModel", "delete failed", it) }
 
+    init {
+      //  viewModelScope.launch {
+          //  _viewModelState.update { it.copy(isLoading = true) }
+         //   repository.getCoursesProfile()
+              //  .onSuccess { courses ->
+               //     _viewModelState.update { it.copy(courses, isLoading = false) }
+              //  }
+               // .onFailure {
+                //    _viewModelState.update { it.copy(error = true) }
+                //    Log.e("MainProfileViewModel", "delete failed", it)
+               // }
+
+       // }
+        getToken()
+    }
+
+    private fun getToken() {
+        viewModelScope.launch {
+            local.getToken().onSuccess {
+               getUser(it.token)
             }
         }
+    }
+    private fun getUser(token: String){
+        viewModelScope.launch {
+            _coursesUiState.value = CoursesUiState.Loading
+            repository.getUser(token)
+                .onSuccess {userResponse ->
+                    //_viewModelState.update { it.copy(user = userResponse, isLoading = false) }
+                    _coursesUiState.value = CoursesUiState.Courses(userResponse)
 
-    fun getCourseById(courseId: Int,mainTopicId: Int, subtopicId: Int){
+                }
+                .onFailure {
+                    _coursesUiState.value = CoursesUiState.Error
+                    Log.e("MainProfileViewModel", " failed get User by token", it)
+                }
+        }
+    }
+    fun getCourseById(courseId: Int, mainTopicId: Int, subtopicId: Int) {
         viewModelScope.launch {
             _coursesUiState.value = CoursesUiState.Loading
             repository.getCoursesProfile()
@@ -52,7 +81,7 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
 
 
                         }
-                        _coursesUiState.value= CoursesUiState.Courses(dataCourses = courses!!, up)
+                     // _coursesUiState.value = CoursesUiState.Courses(dataCourses = courses!!, up)
 
                     }
 
@@ -60,34 +89,30 @@ class MainProfileViewModel @Inject constructor(private val repository: ProfileUs
                 .onFailure {
                     _coursesUiState.value = CoursesUiState.Error
                 }
-                }
-
         }
 
+    }
 
 
-
-    fun setTheoryIdCourse(courseById:Int, theoryId: Int){
+    fun setTheoryIdCourse(courseById: Int, theoryId: Int) {
         viewModelScope.launch {
-        //    _coursesUiState.value.courseProfile.let { data ->
-           // val updateCourse = data?.copy(courses = data.courses.map {courses->
-                 // courses.copy(subtopics = courses.subtopics.map {subtopic->
-                    //  subtopic.copy(theory = subtopic.theory.map {theory->
-                        // if (theory.id == theoryId){
-                       //      theory.copy(status = true)
-                       //  } else theory
-                   //   })
+            //    _coursesUiState.value.courseProfile.let { data ->
+            // val updateCourse = data?.copy(courses = data.courses.map {courses->
+            // courses.copy(subtopics = courses.subtopics.map {subtopic->
+            //  subtopic.copy(theory = subtopic.theory.map {theory->
+            // if (theory.id == theoryId){
+            //      theory.copy(status = true)
+            //  } else theory
+            //   })
 
-                 // }
-               // )
+            // }
+            // )
 
-             // })
-              // repository.setTheoryCourse(courseById,
-                 // dataCourses = updateCourse
-               // )
-          //  }
-
-
+            // })
+            // repository.setTheoryCourse(courseById,
+            // dataCourses = updateCourse
+            // )
+            //  }
 
 
         }

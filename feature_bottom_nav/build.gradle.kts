@@ -44,6 +44,8 @@ dependencies {
     api(libs.androidx.room.ktx)
     api(libs.androidx.navigation.compose)
     api(libs.androidx.navigation.runtime.android)
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.converter.gson)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)

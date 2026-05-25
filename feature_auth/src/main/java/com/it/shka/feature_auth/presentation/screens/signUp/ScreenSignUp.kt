@@ -1,6 +1,8 @@
 package com.it.shka.feature_auth.presentation.screens.signUp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,8 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,42 +52,39 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.it.shka.core.navigation.AppContent
 import com.it.shka.feature_auth.R
 import com.it.shka.feature_auth.presentation.navigation.rout.RouteAuthScreens
-import com.it.shka.feature_auth.presentation.screens.signUp.AuthUserViewModel
+import com.it.shka.feature_auth.presentation.screens.ScreenError
 import kotlinx.coroutines.delay
 
 @Composable
 fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostController){
     val viewModel = hiltViewModel<AuthUserViewModel>()
-    val authMessage = viewModel.authMessage.collectAsState()
-    val startScreen by viewModel.startScreen
-    var email by remember { mutableStateOf("") }
+     val signUpUIState by viewModel.signUpUIState.collectAsState()
+    val authMessage by viewModel.authMessage.collectAsState()
+       var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
     var rPasswordVisibility by remember { mutableStateOf(false) }
     var passwordVisibility by remember { mutableStateOf(false) }
     var stateButtonAndProgress by remember { mutableStateOf(false) }
     var onClickButton by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
-    LaunchedEffect(onClickButton) {
-        delay(4000L)
-        if (onClickButton){
-            viewModel.registerUser(email = email, password = password, repeatPassword =repeatPassword, context )
-            onClickButton = false
-            stateButtonAndProgress = false
-        }
-    }
-    when(startScreen){
-       // StartScreen.Registration ->ScreenSignUpContent()
-        StartScreen.Main -> appNavigation.navigate(RouteAuthScreens.ScreenMainContent.rout){
+when(signUpUIState){
+    is SignUpUIState.Loading -> {  stateButtonAndProgress = true}
+    is SignUpUIState.Success -> {
+        appNavigation.navigate(AppContent){
             popUpTo(navController.graph.startDestinationId){
                 inclusive = true
             }
         }
-        null->{}
     }
+    is SignUpUIState.Error -> { ScreenError() }
+    is SignUpUIState.Empty -> {}
+
+}
+
 
     Box (modifier = Modifier
         .fillMaxSize()
@@ -93,6 +93,7 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
         Column (
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(15.dp)
         ){
             Spacer(modifier = Modifier
@@ -106,10 +107,10 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
             )
             Text(
                 modifier = Modifier
-                    .fillMaxWidth()
+                  .fillMaxWidth()
                     .padding(top = 5.dp, bottom = 10.dp),
-                text = authMessage.value.message.toString(),
-                fontSize = 16.sp,
+               text = authMessage,
+             fontSize = 16.sp,
                 color = Color.Red
             )
             Text(
@@ -286,9 +287,10 @@ fun ScreenSignUp( navController: NavHostController, appNavigation: NavHostContro
                             shape = RoundedCornerShape(30.dp)
                         ),
                     onClick = {
-                        onClickButton = true
-                        stateButtonAndProgress = true
-                              },
+                       // onClickButton = true
+                        viewModel.register(email = email, password = password, repeatPassword =repeatPassword)
+
+                    },
 
                     colors = ButtonDefaults.buttonColors(
                         contentColor = colorResource(R.color.button),

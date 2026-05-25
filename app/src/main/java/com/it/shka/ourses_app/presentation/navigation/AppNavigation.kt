@@ -16,7 +16,7 @@ fun AppNavigation(){
     val navAppNavigationController = rememberNavController()
     NavHost(
         navController = navAppNavigationController,
-        startDestination = ScreenSignUp
+        startDestination = OnboardingScreen
     ){
         composable<OnboardingScreen>{
         NavigationScreenOnboarding(navAppNavigationController)

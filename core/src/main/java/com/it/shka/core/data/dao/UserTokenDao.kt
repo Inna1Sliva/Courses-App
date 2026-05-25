@@ -7,8 +7,10 @@ import com.it.shka.core.data.entity.UserTokenEntity
 
 @Dao
 interface UserTokenDao {
-    @Query("SELECT * FROM courses" )
-    suspend fun getUserToken(): UserTokenEntity
+    @Query( "SELECT COUNT(*) FROM userToken")
+    suspend fun getTokenCount(): Int
+    @Query("SELECT * FROM userToken")
+    suspend fun getToken(): UserTokenEntity
     @Insert
-    suspend fun setUserToken(userId: UserTokenEntity)
+    suspend fun setUserToken(userToken: UserTokenEntity)
 }

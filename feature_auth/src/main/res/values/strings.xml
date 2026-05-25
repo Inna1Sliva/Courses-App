@@ -16,4 +16,12 @@
     <string name="errorMessageValidatePassword">Пароли не совпадают</string>
     <string name="errorMessageEmailExist">Пользователь с такой почтой уже существует</string>
     <string name="errorMessageAuth">Пожалуйста, заполните все поля</string>
+    <string name="text_error">Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.</string>
+    <string name="title_error">Ошибка</string>
+    <string name="button_text_cancel">ОТМЕНА</string>
+    <string name="button_text_resume">ПРОДОЛЖИТЬ</string>
+
+
+
+
 </resources>

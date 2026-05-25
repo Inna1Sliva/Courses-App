@@ -2,6 +2,7 @@ package com.it.shka.ourses_app.hilt
 
 import com.it.shka.feature_main.data.api.ApiMainCourses
 import com.it.shka.feature_auth.data.api.ApiAuthUsers
+import com.it.shka.feature_bottom_nav.data.api.ApiServerBottomNav
 import com.it.shka.feature_profile.data.api.ApiProfileCourses
 import dagger.Module
 import dagger.Provides
@@ -37,36 +38,45 @@ object ModuleRetrofit {
     fun providerOkHttpClient(interceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
-            .connectTimeout(30, TimeUnit.SECONDS) // Таймаут соединения
-            .readTimeout(30, TimeUnit.SECONDS)    // Таймаут чтения данных
-            .writeTimeout(30, TimeUnit.SECONDS)   // Таймаут записи данных
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            //.client(okHttpClient)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiAuthUsers {
+    fun provideApiServer(retrofit: Retrofit): ApiAuthUsers {
         return retrofit.create(ApiAuthUsers::class.java)
     }
- @Provides
- @Singleton
- fun provideApiMainCourses(retrofit: Retrofit): ApiMainCourses{
-     return retrofit.create(ApiMainCourses::class.java)
- }
+
     @Provides
     @Singleton
-    fun provideApiProfileService(retrofit: Retrofit): ApiProfileCourses {
+    fun provideApiMainCourses(retrofit: Retrofit): ApiMainCourses {
+        return retrofit.create(ApiMainCourses::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiProfileServer(retrofit: Retrofit): ApiProfileCourses {
         return retrofit.create(ApiProfileCourses::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiServerBottomNav(retrofit: Retrofit): ApiServerBottomNav {
+        return retrofit.create(ApiServerBottomNav::class.java)
     }
 }
 

@@ -6,4 +6,7 @@
     <string name="Write_to_support">Написать в поддержку</string>
     <string name="profile">Профиль</string>
     <string name="button_option">Ответить</string>
+    <string name="chat_notification">Уведомления </string>
+    <string name="title_empty"> У вас ничего не добавлено</string>
+
 </resources>

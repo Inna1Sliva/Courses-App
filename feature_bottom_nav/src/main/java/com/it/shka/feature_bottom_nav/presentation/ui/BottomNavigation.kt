@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -33,6 +34,7 @@ import com.it.shka.feature_bottom_nav.presentation.model.BottomItemUiState
 fun BottomNavigation(navHostNavAppController: NavHostController) {
     val vm = hiltViewModel<BottomNavViewModel>()
     val badgeState = vm.badgeFavorites.collectAsState()
+    val badgeAccount by remember {vm.badgeAccount }.collectAsState()
 
     NavigationBar(
         modifier = Modifier
@@ -55,7 +57,16 @@ fun BottomNavigation(navHostNavAppController: NavHostController) {
                                      )
                                  }
                              }else{}}
-                             3->{}
+                             3->{
+                                 if (badgeAccount > 0){
+                                     Badge (containerColor = Color.Red){
+                                         Text(
+                                             text = badgeAccount.toString(),
+                                             color = Color.White
+                                         )
+                                     }
+                                 }
+                             }
                          }
 
                         }

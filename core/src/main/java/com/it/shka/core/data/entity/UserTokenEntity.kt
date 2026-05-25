@@ -1,12 +1,13 @@
 package com.it.shka.core.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "userId")
+@Entity(tableName = "userToken")
 data class UserTokenEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    val token: String?
+    @PrimaryKey
+    @ColumnInfo(name = "token")
+    val token: String
 
 )
